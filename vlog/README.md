@@ -17,7 +17,7 @@ func main() {
         m := make(map[string]string)
         m["demo1"] = "2"                                                                                                 
         m["demo2"] = "3"                                                                                                 
-        vl.Infoln("gaoqilin", "xxx", string([]byte("hello\t")), m)                                                       
+        vl.Infoln("aaaaaaaaaa", "xxx", string([]byte("hello\t")), m)                                                       
         fmt.Println(vl)
 }   
 ```
