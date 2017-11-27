@@ -1,6 +1,6 @@
 package base
 
-import "github.com/relunctance/goutils/log/field"
+import "github.com/relunctance/goutils/vlog/field"
 
 // Option 代表日志记录器的选项。
 type Option interface {

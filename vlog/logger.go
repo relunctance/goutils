@@ -1,4 +1,4 @@
-package log
+package vlog
 
 import (
 	"fmt"
@@ -6,8 +6,8 @@ import (
 	"os"
 	"sync"
 
-	"github.com/relunctance/goutils/log/base"
-	"github.com/relunctance/goutils/log/logrus"
+	"github.com/relunctance/goutils/vlog/base"
+	"github.com/relunctance/goutils/vlog/logrus"
 )
 
 // LoggerCreator 代表日志记录器的创建器。

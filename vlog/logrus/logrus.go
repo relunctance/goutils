@@ -4,8 +4,8 @@ import (
 	"io"
 	"os"
 
-	"github.com/relunctance/goutils/log/base"
-	"github.com/relunctance/goutils/log/field"
+	"github.com/relunctance/goutils/vlog/base"
+	"github.com/relunctance/goutils/vlog/field"
 
 	"github.com/Sirupsen/logrus"
 )

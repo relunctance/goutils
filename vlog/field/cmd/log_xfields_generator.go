@@ -16,7 +16,7 @@ import (
 	"strings"
 	"time"
 
-	"github.com/relunctance/goutils/log/base"
+	"github.com/relunctance/goutils/vlog/base"
 )
 
 // field_decl_template 代表日志字段类型的声明的内容模板。

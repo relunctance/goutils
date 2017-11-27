@@ -1,10 +1,10 @@
-package log
+package vlog
 
 import (
 	"os"
 	"testing"
 
-	"github.com/relunctance/goutils/log/base"
+	"github.com/relunctance/goutils/vlog/base"
 )
 
 func TestLogger(t *testing.T) {
