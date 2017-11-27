@@ -9,9 +9,7 @@ func Ord(c string) []rune {
 }
 
 func Substr(str string, begin, length int) string {
-	lth := len(str)
-
-	// 简单的越界判断
+	lth := len(str)	
 	if begin < 0 {
 		begin = 0
 	}
@@ -22,7 +20,6 @@ func Substr(str string, begin, length int) string {
 	if end > lth {
 		end = lth
 	}
-
-	// 返回子串
+	
 	return string(str[begin:end])
 }
