@@ -30,11 +30,7 @@ func NewLogger() base.MyLogger {
 }
 
 // NewLoggerBy 会根据指定的参数新建并返回一个日志记录器。
-func NewLoggerBy(
-	level base.LogLevel,
-	format base.LogFormat,
-	writer io.Writer,
-	options []base.Option) base.MyLogger {
+func NewLoggerBy(level base.LogLevel, format base.LogFormat, writer io.Writer, options []base.Option) base.MyLogger {
 	var logrusLevel logrus.Level
 	switch level {
 	default:

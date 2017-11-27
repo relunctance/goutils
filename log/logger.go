@@ -11,11 +11,7 @@ import (
 )
 
 // LoggerCreator 代表日志记录器的创建器。
-type LoggerCreator func(
-	level base.LogLevel,
-	format base.LogFormat,
-	writer io.Writer,
-	options []base.Option) base.MyLogger
+type LoggerCreator func(level base.LogLevel, format base.LogFormat, writer io.Writer, options []base.Option) base.MyLogger
 
 // loggerCreatorMap 代表日志记录器创建器的映射。
 var loggerCreatorMap = map[base.LoggerType]LoggerCreator{}
@@ -24,10 +20,7 @@ var loggerCreatorMap = map[base.LoggerType]LoggerCreator{}
 var rwm sync.RWMutex
 
 // RegisterLogger 用于注册日志记录器。
-func RegisterLogger(
-	loggerType base.LoggerType,
-	creator LoggerCreator,
-	cover bool) error {
+func RegisterLogger(loggerType base.LoggerType, creator LoggerCreator, cover bool) error {
 	if loggerType == "" {
 		return fmt.Errorf("logger register error: invalid logger type")
 	}
@@ -54,12 +47,7 @@ func DLogger() base.MyLogger {
 }
 
 // Logger 会新建一个日志记录器。
-func Logger(
-	loggerType base.LoggerType,
-	level base.LogLevel,
-	format base.LogFormat,
-	writer io.Writer,
-	options []base.Option) base.MyLogger {
+func Logger(loggerType base.LoggerType, level base.LogLevel, format base.LogFormat, writer io.Writer, options []base.Option) base.MyLogger {
 	var logger base.MyLogger
 	rwm.RLock()
 	creator, ok := loggerCreatorMap[loggerType]
