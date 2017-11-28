@@ -3,6 +3,8 @@ package cmd
 import (
 	"fmt"
 	"os"
+	"strconv"
+	"strings"
 	"testing"
 )
 
@@ -16,6 +18,10 @@ func TestCmdRuncommand(t *testing.T) {
 		t.Fatalf("Fatal error:%s\n", err)
 	}
 
+	pid, _ := strconv.Atoi(strings.TrimSpace(output[0]))
+	if pid != os.Getpid() { //
+		t.Fatalf("pid get error error:exec pid[%d] != os.getpid[%d]\n", pid, os.Getpid())
+	}
 	filepath := "/tmp/xxx_test_go.txt"
 	f, err := os.OpenFile(filepath, os.O_RDWR|os.O_CREATE, 0755)
 	f.WriteString("333\n")
