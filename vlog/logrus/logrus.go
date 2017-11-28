@@ -64,10 +64,7 @@ func NewLoggerBy(level base.LogLevel, format base.LogFormat, writer io.Writer, o
 }
 
 // initInnerLogger 会初始化内部使用的日志记录器。
-func initInnerLogger(
-	level logrus.Level,
-	format base.LogFormat,
-	writer io.Writer) *logrus.Entry {
+func initInnerLogger(level logrus.Level, format base.LogFormat, writer io.Writer) *logrus.Entry {
 	innerLogger := logrus.New()
 
 	switch format {
