@@ -1,3 +1,4 @@
+//并发安全[]int 
 package cow
 
 import (
