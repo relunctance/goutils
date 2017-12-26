@@ -19,7 +19,47 @@ var SPLIT_NUM int = 20
 //运行命令, 支持管道
 //示例1: RunCommand("ls /home/")
 //示例2: RunCommand("ps auxwww | grep init | grep -v grep")
+
 func RunCommand(cmd string) ([]string, error) {
+	return RunCommandOutputString(cmd)
+}
+
+//效率些
+func RunCommandOutputByte(cmd string) ([]byte, error) {
+	cmds, err := GetCmds(cmd)
+	if err != nil {
+		return nil, err
+	}
+	return RunCmds(cmds)
+}
+
+func RunCommandOutputString(cmd string) ([]string, error) {
+	output, err := RunCommandOutputByte(cmd)
+	if err != nil {
+		return nil, err
+	}
+	return FormatString(output)
+}
+
+func FormatString(output []byte) ([]string, error) {
+	var lines []string
+	var outputBuf bytes.Buffer
+	outputBuf.Write(output)
+	for {
+		line, err := outputBuf.ReadBytes('\n')
+		if err != nil {
+			if err == io.EOF {
+				break
+			} else {
+				return nil, getError(err, nil)
+			}
+		}
+		lines = append(lines, string(line))
+	}
+	return lines, nil
+}
+
+func GetCmds(cmd string) ([]*exec.Cmd, error) {
 	cmd = strings.TrimSpace(cmd)
 	if cmd == "" {
 		return nil, errors.New("cmd code is empty")
@@ -46,10 +86,10 @@ func RunCommand(cmd string) ([]string, error) {
 		}
 
 	}
-	return runCmds(cmds)
+	return cmds, nil
 }
 
-func runCmds(cmds []*exec.Cmd) ([]string, error) {
+func RunCmds(cmds []*exec.Cmd) ([]byte, error) {
 
 	if cmds == nil || len(cmds) == 0 {
 		return nil, errors.New("The cmd slice is invalid!")
@@ -80,21 +120,7 @@ func runCmds(cmds []*exec.Cmd) ([]string, error) {
 			first = false
 		}
 	}
-	var lines []string
-	var outputBuf bytes.Buffer
-	outputBuf.Write(output)
-	for {
-		line, err := outputBuf.ReadBytes('\n')
-		if err != nil {
-			if err == io.EOF {
-				break
-			} else {
-				return nil, getError(err, nil)
-			}
-		}
-		lines = append(lines, string(line))
-	}
-	return lines, nil
+	return output, nil
 }
 
 func getCmdPlaintext(cmd *exec.Cmd) string {
