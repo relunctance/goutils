@@ -17,12 +17,12 @@ import (
 
 func main() {
 
-    f, _ := os.OpenFile("./logtmp.log", os.O_RDWR|os.O_APPEND|os.O_CREATE, 0766)
+        f, _ := os.OpenFile("./logtmp.log", os.O_RDWR|os.O_APPEND|os.O_CREATE, 0766)
         multiW := io.MultiWriter(os.Stdout, f) //终端和文件同时输出内容
         defer f.Close()
         option := []base.Option{base.OptWithLocation{true}}
-    //用法1:
-vl := vlog.Logger(base.TYPE_LOGRUS, base.LEVEL_INFO, base.FORMAT_TEXT, multiW, option)
+        //用法1:
+        vl := vlog.Logger(base.TYPE_LOGRUS, base.LEVEL_INFO, base.FORMAT_TEXT, multiW, option)
         m := make(map[string]string)
         m["demo1"] = "2"
         m["demo2"] = "3"
