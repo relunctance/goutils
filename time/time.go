@@ -46,3 +46,8 @@ func GetTodayTimer() time.Time {
 	}
 	return t
 }
+
+//获取昨天的Time
+func GetYesterdayTimer() time.Time {
+	return GetBeforeDayTimer(-1)
+}
