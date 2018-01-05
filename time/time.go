@@ -1,6 +1,9 @@
 package time
 
 import (
+	"errors"
+	"strconv"
+	"strings"
 	"time"
 
 	"github.com/metakeule/fmtdate"
@@ -50,4 +53,35 @@ func GetTodayTimer() time.Time {
 //获取昨天的Time
 func GetYesterdayTimer() time.Time {
 	return GetBeforeDayTimer(-1)
+}
+
+/*
+示例:
+	t, _ = Strtotime("-1 day", time.Now())
+	t, _ = Strtotime("-1       day", time.Now())
+	t, _ = Strtotime(" -1  month ", time.Now())
+	t, _ = Strtotime(" -1  year ", time.Now())
+*/
+func Strtotime(format string, t time.Time) (T time.Time, err error) {
+	format = strings.TrimSpace(format)
+	arr := strings.Fields(format)
+	var year, month, day, num int
+	num, err = strconv.Atoi(arr[0])
+	if err != nil {
+		return
+	}
+
+	switch arr[1] {
+	case "day":
+		day = num
+	case "year":
+		year = num
+	case "month":
+		month = num
+	default:
+		err = errors.New("format parse faild , you can use: day|month|year")
+		return
+	}
+	T = t.AddDate(year, month, day)
+	return
 }
