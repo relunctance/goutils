@@ -3,7 +3,9 @@ package str
 import (
 	"fmt"
 	"math"
+	"net/url"
 	"strconv"
+	"strings"
 )
 
 func Chr(c rune) string {
@@ -39,4 +41,19 @@ func StrToInt32(str string) (int32, error) {
 		return 0, fmt.Errorf("%d is not 32-bit integer", num)
 	}
 	return int32(num), nil
+}
+
+/* eg:
+u := ParseStr("?username=zhangsan&passwd=123456")
+u.Get("username");
+*/
+func ParseStr(str string) url.Values {
+	if strings.Index(str, "?") == -1 {
+		panic(fmt.Errorf("must exists '?' like: '?username=zhangsan&passwd=123456'"))
+	}
+	u, err := url.Parse(str)
+	if err != nil {
+		panic(err)
+	}
+	return u.Query()
 }
