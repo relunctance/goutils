@@ -2,8 +2,8 @@ package slicelimit
 
 import (
 	"testing"
-	"utils"
 
+	"github.com/relunctance/goutils/slice"
 	"github.com/smartystreets/goconvey/convey"
 )
 
@@ -58,7 +58,7 @@ func TestOffset(t *testing.T) {
 
 	resultdata := []int{4, 5, 6, 7, 8}
 	for _, val := range arr[start:end] {
-		if !utils.InArrayInts(val, resultdata) {
+		if !slice.InArrayInts(val, resultdata) {
 			t.Fatalf("[%v] should be in %v\n", val, resultdata)
 		}
 	}
