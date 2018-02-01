@@ -3,8 +3,9 @@ package slicelimit
 import (
 	"strings"
 	"testing"
+	"utils"
 
-	"github.com/relunctance/goutils/str"
+	"github.com/smartystreets/goconvey/convey"
 )
 
 var data [][]string = [][]string{
@@ -18,14 +19,37 @@ var data [][]string = [][]string{
 func getData(arr [][]int) (res []string) {
 
 	for key, items := range arr {
-		if items == nil {
+		if items == nil { //这里如果为nil 说明是跳过的
 			continue
 		}
-		for _, v := range items {
-			res = append(res, data[key][v])
-		}
+		start, end := GetStartEndByItems(items)
+		res = append(res, data[key][start:end]...)
+		/*
+			for _, v := range items {	//效率不好
+				res = append(res, data[key][v])
+			}
+		*/
 	}
 	return
+}
+
+func TestGetDyadicArrayByOffset2(t *testing.T) {
+	convey.Convey("测试单独二维slice", t, func() {
+		multiDyadicArr := [][]int{
+			{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14},
+			{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12},
+		}
+		totalLength := int64(len(multiDyadicArr[0]) + len(multiDyadicArr[1]))
+		offset := int64(8)
+		pagesize := int64(10)
+		_, arr := GetDyadicArrayByOffset(offset, pagesize, totalLength, multiDyadicArr)
+		convey.Convey("数组1应该相等:", func() {
+			b1 := utils.CheckIntSliceEqual(arr[0], []int{8, 9, 10, 11, 12, 13, 14})
+			convey.So(b1, convey.ShouldBeTrue)
+			b2 := utils.CheckIntSliceEqual(arr[1], []int{0, 1, 2})
+			convey.So(b2, convey.ShouldBeTrue)
+		})
+	})
 }
 
 func TestGetDyadicArrayByOffset(t *testing.T) {
@@ -39,7 +63,7 @@ func TestGetDyadicArrayByOffset(t *testing.T) {
 			convey.So(nil, convey.ShouldEqual, err)
 		})
 		convey.Convey("arr值判断1:", func() {
-			bl := str.CheckStringSliceEqual(strings.Fields("1a 1b 1c 2a 2b 2c 2d 2e 2f 2g"), getData(arr))
+			bl := utils.CheckStringSliceEqual(strings.Fields("1a 1b 1c 2a 2b 2c 2d 2e 2f 2g"), getData(arr))
 			convey.So(bl, convey.ShouldBeTrue)
 		})
 
@@ -54,29 +78,31 @@ func TestGetDyadicArrayByOffset(t *testing.T) {
 
 		err, arr = GetDyadicArrayByOffset(5, 10, totalLength, multiDyadicArr)
 		convey.Convey("arr值判断2:", func() {
-			bl := str.CheckStringSliceEqual(strings.Fields("2c 2d 2e 2f 2g 3c 3d 3e 3f 3g"), getData(arr))
+			bl := utils.CheckStringSliceEqual(strings.Fields("2c 2d 2e 2f 2g 3a 3b 3c 3d 3e"), getData(arr))
 			convey.So(bl, convey.ShouldBeTrue)
 			convey.So(err, convey.ShouldBeNil)
 		})
 		err, arr = GetDyadicArrayByOffset(3, 5, totalLength, multiDyadicArr)
 		convey.Convey("检测当start为边界时 , 是否报错问题:", func() {
-			bl := str.CheckStringSliceEqual(strings.Fields("2a 2b 2c 2d 2e"), getData(arr))
+			bl := utils.CheckStringSliceEqual(strings.Fields("2a 2b 2c 2d 2e"), getData(arr))
 			convey.So(bl, convey.ShouldBeTrue)
 			convey.So(err, convey.ShouldBeNil)
 
 		})
 		err, arr = GetDyadicArrayByOffset(0, 5000000, totalLength, multiDyadicArr)
 		convey.Convey("当pagesize过大时检测", func() {
-			bl := str.CheckStringSliceEqual(strings.Fields("1a 1b 1c 2a 2b 2c 2d 2e 2f 2g 3a 3b 3c 3d 3e 3f 3g 3h 3i 4a 4b 4c 4d 4e 4f 4g 4h 4i 4j 4k"), getData(arr))
+			bl := utils.CheckStringSliceEqual(strings.Fields("1a 1b 1c 2a 2b 2c 2d 2e 2f 2g 3a 3b 3c 3d 3e 3f 3g 3h 3i 4a 4b 4c 4d 4e 4f 4g 4h 4i 4j 4k"), getData(arr))
 			convey.So(bl, convey.ShouldBeTrue)
 			convey.So(err, convey.ShouldBeNil)
 
 		})
+
 		err, arr = GetDyadicArrayByOffset(13, 5000000, totalLength, multiDyadicArr)
 		convey.Convey("检测", func() {
-			bl := str.CheckStringSliceEqual(strings.Fields("3d 3e 3f 3g 3h 3i 4d 4e 4f 4g 4h 4i 4j 4k"), getData(arr))
+			bl := utils.CheckStringSliceEqual(strings.Fields("3d 3e 3f 3g 3h 3i 4a 4b 4c 4d 4e 4f 4g 4h 4i 4j 4k"), getData(arr))
 			convey.So(bl, convey.ShouldBeTrue)
 			convey.So(err, convey.ShouldBeNil)
+			convey.So(len(getData(arr)), convey.ShouldEqual, int(totalLength-13))
 		})
 	})
 }

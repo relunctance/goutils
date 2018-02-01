@@ -11,6 +11,7 @@ import (
 var EOF error = errors.New("END")
 
 //根据offset和pagesize获取边界
+//函数功能请见测试用例
 func GetBoundary(offset, pagesize, length int64) (err error, start int64, end int64) {
 
 	if offset > length {
@@ -33,12 +34,12 @@ func GetBoundary(offset, pagesize, length int64) (err error, start int64, end in
 }
 
 //检测是否结束
-func CheckIsEnd(err error) bool {
+func CheckIsEnd(err error) (bool, error) {
 	if err == EOF {
-		return true
+		return true, nil
 	}
 	if err != nil {
-		panic(err)
+		return true, err
 	}
-	return false
+	return false, nil
 }

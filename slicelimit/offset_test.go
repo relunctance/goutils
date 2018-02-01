@@ -9,11 +9,10 @@ import (
 
 func TestCheckIsEndPanic(t *testing.T) {
 	convey.Convey("检测CheckIsEnd是否报错", t, func() {
-		convey.Convey("必须panic", func() {
-			convey.So(func() {
-				err, _, _ := GetBoundary(11, 5, 10)
-				CheckIsEnd(err)
-			}, convey.ShouldPanic)
+		convey.Convey("必须报错", func() {
+			err, _, _ := GetBoundary(11, 5, 10)
+			_, err2 := CheckIsEnd(err)
+			convey.So(err2, convey.ShouldNotBeNil)
 		})
 	})
 }
@@ -31,7 +30,7 @@ func TestOffset(t *testing.T) {
 	if start != end {
 		t.Fatalf("[start] should be eq [end]")
 	}
-	if CheckIsEnd(err) != true {
+	if hasNext, _ := CheckIsEnd(err); hasNext != true {
 		t.Fatalf("should be is true")
 	}
 
@@ -63,7 +62,7 @@ func TestOffset(t *testing.T) {
 			t.Fatalf("[%v] should be in %v\n", val, resultdata)
 		}
 	}
-	if CheckIsEnd(err) != false {
+	if hasNext, _ := CheckIsEnd(err); hasNext != false {
 		t.Errorf("error should be is false")
 	}
 	err, start, end = GetBoundary(3, 100, l) // nil , 3, 10

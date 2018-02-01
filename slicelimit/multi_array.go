@@ -5,6 +5,7 @@ import (
 )
 
 //多维数组使用offset和pagesize
+//函数功能, 请见测试用例
 func GetDyadicArrayByOffset(offset, pagesize, totalNum int64, multiDyadicArr [][]int) (error, [][]int) {
 	var err error
 	var resultArr [][]int = make([][]int, len(multiDyadicArr))
@@ -12,6 +13,7 @@ func GetDyadicArrayByOffset(offset, pagesize, totalNum int64, multiDyadicArr [][
 		err = fmt.Errorf("offset:[%d] has exceed DyadicArray TotalLength:[%d]  boundary", offset, totalNum)
 	}
 	errstr, start, _ := GetBoundary(offset, pagesize, totalNum)
+	//fmt.Println("start:", start)
 	if errstr != nil {
 		err = errstr
 		return err, resultArr
@@ -20,17 +22,15 @@ func GetDyadicArrayByOffset(offset, pagesize, totalNum int64, multiDyadicArr [][
 	var psize int64 = pagesize
 	k := int64(0)
 	for j, values := range multiDyadicArr {
-		//fmt.Println("values:", values)
 		vl := int64(len(values)) //3
-		//resultArr[j] = make([]int, vl)
-		resultArr[j] = nil
+		resultArr[j] = nil       //注意: 对应反解析的时候如果碰到为nil说明是需要跳过跳过的 , 参见测试用例: getData()
 		if start > vl {
 			start = start - vl
 			continue
 		}
 
 		_err, _start, _end := GetBoundary(start, psize, vl)
-		//fmt.Println("j: ", j, "__start__", start, "__end__", end, " ############ ", "_start:", _start, "_end:", _end, "_err:", err)
+		//fmt.Println("_start:", _start)
 		if _err != nil {
 			if _err == EOF {
 				start = 0
@@ -46,6 +46,8 @@ func GetDyadicArrayByOffset(offset, pagesize, totalNum int64, multiDyadicArr [][
 		if k >= pagesize {
 			break
 		}
+		start = 0 //fixed 重新修正start
+
 		psize = psize - tmparrLength
 
 	}
@@ -73,4 +75,11 @@ func BuildDyadicArray(data [][]string) ([][]int, int64) {
 		i++
 	}
 	return arr, totalNum
+}
+
+//针对二维数组获取对应的start和end , 复杂度为O(1)
+func GetStartEndByItems(item []int) (start, end int) {
+	start = item[0]
+	end = item[len(item)-1] + 1
+	return
 }
