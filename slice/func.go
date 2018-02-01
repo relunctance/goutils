@@ -5,6 +5,7 @@ import (
 	"sort"
 )
 
+//元素存在数组检测函数
 func InArrayInts(a int, arr []int) bool {
 	if !sort.IntsAreSorted(arr) {
 		panic(fmt.Errorf("must be are sorted arr"))
@@ -21,7 +22,7 @@ func InArrayInts(a int, arr []int) bool {
 
 }
 
-//检测slice是否相等
+//检测slice []int是否相等
 func CheckIntSliceEqual(x, y []int) bool {
 	if len(x) != len(y) {
 		return false
@@ -34,7 +35,7 @@ func CheckIntSliceEqual(x, y []int) bool {
 	return true
 }
 
-//检测slice是否相等
+//检测slice []string是否相等
 func CheckStringSliceEqual(x, y []string) bool {
 	if len(x) != len(y) {
 		return false
