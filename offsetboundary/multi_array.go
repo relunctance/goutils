@@ -103,11 +103,12 @@ func MultiIndexDataHasNext(indexData, offsetIndexData [][]int) bool {
 			continue
 		}
 		if slice.IssetSlice(offsetIndexData, key) {
-			if len(offsetIndexData[key]) == 0 {
-				continue
-			}
-			if isend, _ := CheckIsOffsetEnd(indexdata, offsetIndexData[key]); !isend {
-				//dump.P("isend:%v , indexdata: %v , offsetIndexData[key]:%v\n", isend, indexdata, offsetIndexData[key])
+			item := offsetIndexData[key]
+			isend, _ := CheckIsOffsetEnd(indexdata, item)
+			if !isend {
+				if key != len(indexData)-1 && len(item) == 0 {
+					continue
+				}
 				return true
 			}
 		}
@@ -118,7 +119,6 @@ func MultiIndexDataHasNext(indexData, offsetIndexData [][]int) bool {
 func CheckIsOffsetEnd(indexData, offsetData []int) (isend bool, next_offset int) {
 	iLen := len(indexData)
 	oLen := len(offsetData)
-	//dump.Println("iLen:", iLen, "oLen:", oLen)
 	//iLen: 18 oLen: 10
 	//iLen: 16 oLen: 0
 	if oLen > iLen {

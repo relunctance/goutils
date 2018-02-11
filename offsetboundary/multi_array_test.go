@@ -44,12 +44,15 @@ func TestMultiIndexDataHasNext(t *testing.T) {
 			convey.So(MultiIndexDataHasNext(indexData, offsetIndexData), convey.ShouldBeTrue)
 			offsetIndexData = [][]int{{}, {6}}
 			convey.So(MultiIndexDataHasNext(indexData, offsetIndexData), convey.ShouldBeTrue)
+
 			offsetIndexData = [][]int{{}, {5, 6, 7}}
 			convey.So(MultiIndexDataHasNext(indexData, offsetIndexData), convey.ShouldBeFalse)
-			offsetIndexData = [][]int{{14}, {}}
-			convey.So(MultiIndexDataHasNext(indexData, offsetIndexData), convey.ShouldBeFalse)
+
+			offsetIndexData = [][]int{{14}, {}} //应该返回true , 下一个还没有取呢
+			convey.So(MultiIndexDataHasNext(indexData, offsetIndexData), convey.ShouldBeTrue)
+
 			offsetIndexData = [][]int{{}, {}}
-			convey.So(MultiIndexDataHasNext(indexData, offsetIndexData), convey.ShouldBeFalse)
+			convey.So(MultiIndexDataHasNext(indexData, offsetIndexData), convey.ShouldBeTrue)
 		})
 
 		convey.Convey("测试初始值中indexData存在空的情况:", func() {
@@ -63,7 +66,7 @@ func TestMultiIndexDataHasNext(t *testing.T) {
 			var offsetIndexData [][]int
 			offsetIndexData = [][]int{{}, {1, 2, 3}, {}, {3, 4}}
 			convey.So(MultiIndexDataHasNext(indexData, offsetIndexData), convey.ShouldBeTrue)
-			offsetIndexData = [][]int{{}, {1, 2, 3}, {}, {7}} //中间的{1,2,3} 已经直接导致返回了true
+			offsetIndexData = [][]int{{}, {1, 2, 3}, {}, {7}} //因为中间{1,2,3} 直接判定了未取完 , 返回true
 			convey.So(MultiIndexDataHasNext(indexData, offsetIndexData), convey.ShouldBeTrue)
 
 			offsetIndexData = [][]int{{}, {14}, {}, {3, 4}} //{3,4} 导致返回了true
@@ -75,8 +78,8 @@ func TestMultiIndexDataHasNext(t *testing.T) {
 			offsetIndexData = [][]int{{}, {14}, {}, {7}}
 			convey.So(MultiIndexDataHasNext(indexData, offsetIndexData), convey.ShouldBeFalse)
 
-			offsetIndexData = [][]int{{}, {}, {1, 2, 3}, {}} //只要有一个len == 0 的情况下直接跳过的
-			convey.So(MultiIndexDataHasNext(indexData, offsetIndexData), convey.ShouldBeFalse)
+			offsetIndexData = [][]int{{}, {}, {1, 2, 3}, {}}
+			convey.So(MultiIndexDataHasNext(indexData, offsetIndexData), convey.ShouldBeTrue)
 
 		})
 
