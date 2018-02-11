@@ -1,4 +1,4 @@
-package slicelimit
+package offsetboundary
 
 import (
 	"strings"
@@ -31,6 +31,109 @@ func getData(arr [][]int) (res []string) {
 		*/
 	}
 	return
+}
+func TestMultiIndexDataHasNext(t *testing.T) {
+	convey.Convey("测试二维索引数组是否结束", t, func() {
+		convey.Convey("测试返回bool:", func() {
+			indexData := [][]int{
+				{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14},
+				{0, 1, 2, 3, 4, 5, 6, 7},
+			}
+			var offsetIndexData [][]int
+			offsetIndexData = [][]int{{1, 2, 3}, {5}}
+			convey.So(MultiIndexDataHasNext(indexData, offsetIndexData), convey.ShouldBeTrue)
+			offsetIndexData = [][]int{{}, {6}}
+			convey.So(MultiIndexDataHasNext(indexData, offsetIndexData), convey.ShouldBeTrue)
+			offsetIndexData = [][]int{{}, {5, 6, 7}}
+			convey.So(MultiIndexDataHasNext(indexData, offsetIndexData), convey.ShouldBeFalse)
+			offsetIndexData = [][]int{{14}, {}}
+			convey.So(MultiIndexDataHasNext(indexData, offsetIndexData), convey.ShouldBeFalse)
+			offsetIndexData = [][]int{{}, {}}
+			convey.So(MultiIndexDataHasNext(indexData, offsetIndexData), convey.ShouldBeFalse)
+		})
+
+		convey.Convey("测试初始值中indexData存在空的情况:", func() {
+
+			indexData := [][]int{
+				{},
+				{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14},
+				{},
+				{0, 1, 2, 3, 4, 5, 6, 7},
+			}
+			var offsetIndexData [][]int
+			offsetIndexData = [][]int{{}, {1, 2, 3}, {}, {3, 4}}
+			convey.So(MultiIndexDataHasNext(indexData, offsetIndexData), convey.ShouldBeTrue)
+			offsetIndexData = [][]int{{}, {1, 2, 3}, {}, {7}} //中间的{1,2,3} 已经直接导致返回了true
+			convey.So(MultiIndexDataHasNext(indexData, offsetIndexData), convey.ShouldBeTrue)
+
+			offsetIndexData = [][]int{{}, {14}, {}, {3, 4}} //{3,4} 导致返回了true
+			convey.So(MultiIndexDataHasNext(indexData, offsetIndexData), convey.ShouldBeTrue)
+
+			offsetIndexData = [][]int{{}, {}, {}, {7}}
+			convey.So(MultiIndexDataHasNext(indexData, offsetIndexData), convey.ShouldBeFalse)
+
+			offsetIndexData = [][]int{{}, {14}, {}, {7}}
+			convey.So(MultiIndexDataHasNext(indexData, offsetIndexData), convey.ShouldBeFalse)
+
+			offsetIndexData = [][]int{{}, {}, {1, 2, 3}, {}} //只要有一个len == 0 的情况下直接跳过的
+			convey.So(MultiIndexDataHasNext(indexData, offsetIndexData), convey.ShouldBeFalse)
+
+		})
+
+		convey.Convey("测试panic报错:", func() {
+
+			indexData := [][]int{
+				{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14},
+				{0, 1, 2, 3, 4, 5, 6, 7},
+			}
+			offsetIndexData := [][]int{
+				{1, 2, 3},
+				{5},
+				{1, 2, 3},
+			}
+			convey.So(func() {
+				MultiIndexDataHasNext(indexData, offsetIndexData)
+			}, convey.ShouldPanic)
+		})
+	})
+
+}
+
+func TestIsEnd(t *testing.T) {
+	convey.Convey("测试是否offsetdata是否结束:", t, func() {
+		arr := []int{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14}
+		isend, offset := CheckIsOffsetEnd(arr, []int{12, 13, 14})
+		convey.So(isend, convey.ShouldBeTrue)
+		convey.So(offset, convey.ShouldEqual, 0)
+		isend, offset = CheckIsOffsetEnd(arr, []int{7, 8, 9, 10})
+		convey.So(isend, convey.ShouldBeFalse)
+		convey.So(offset, convey.ShouldEqual, 11)
+
+		isend, offset = CheckIsOffsetEnd(arr, []int{14})
+		convey.So(isend, convey.ShouldBeTrue)
+		convey.So(offset, convey.ShouldEqual, 0)
+
+		isend, offset = CheckIsOffsetEnd(arr, []int{0, 1, 2, 3, 4, 5})
+		convey.So(isend, convey.ShouldBeFalse)
+		convey.So(offset, convey.ShouldEqual, 6)
+		isend, offset = CheckIsOffsetEnd(arr, arr)
+		convey.So(isend, convey.ShouldBeTrue)
+		convey.So(offset, convey.ShouldEqual, 0)
+		//检测panic
+		convey.So(func() { CheckIsOffsetEnd(arr, append(arr, 15)) }, convey.ShouldPanic)
+
+		isend, offset = CheckIsOffsetEnd([]int{1, 2, 3, 4, 5, 6, 7}, []int{3, 4})
+		convey.So(isend, convey.ShouldBeFalse)
+		convey.So(offset, convey.ShouldEqual, 5)
+
+		isend, offset = CheckIsOffsetEnd([]int{1, 2, 3, 4, 5, 6, 7}, []int{})
+		convey.So(isend, convey.ShouldBeFalse)
+		convey.So(offset, convey.ShouldEqual, 0)
+
+		isend, offset = CheckIsOffsetEnd([]int{}, []int{})
+		convey.So(isend, convey.ShouldBeFalse)
+		convey.So(offset, convey.ShouldEqual, 0)
+	})
 }
 
 func TestGetDyadicArrayByOffset2(t *testing.T) {

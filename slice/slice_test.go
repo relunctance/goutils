@@ -57,3 +57,27 @@ func TestCheckStringSliceEqual(t *testing.T) {
 		})
 	})
 }
+
+func TestEndStringSlice(t *testing.T) {
+	convey.Convey("测试slice获取最后一个值", t, func() {
+		convey.Convey("测试字符串", func() {
+			arr := []string{
+				"a",
+				"b",
+				"c",
+				"d",
+				"e",
+				"f",
+			}
+			convey.So("f", convey.ShouldEqual, EndStringSlice(arr))
+			convey.So("", convey.ShouldEqual, EndStringSlice([]string{}))
+		})
+
+		convey.Convey("测试int数组", func() {
+			arr := []int{0, 1, 2, 3, 4, 5, 6}
+			convey.So(6, convey.ShouldEqual, EndIntSlice(arr))
+			convey.So(-1, convey.ShouldEqual, EndIntSlice([]int{}))
+		})
+
+	})
+}

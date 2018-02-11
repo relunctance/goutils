@@ -2,6 +2,7 @@ package slice
 
 import (
 	"fmt"
+	"reflect"
 	"sort"
 )
 
@@ -46,4 +47,51 @@ func CheckStringSliceEqual(x, y []string) bool {
 		}
 	}
 	return true
+}
+
+//返回最后一个元素
+func EndStringSlice(arr []string) (res string) {
+	l := len(arr)
+	if l == 0 {
+		return
+	}
+	res = arr[l-1]
+	return
+}
+
+func EndIntSlice(arr []int) (res int) {
+	l := len(arr)
+	if l == 0 {
+		return -1
+	}
+	res = arr[l-1]
+	return
+}
+
+//判断slice中的数组下标是否存在
+func IssetSlice(val interface{}, key int) bool {
+
+	var l int
+
+	switch val.(type) {
+	case []int:
+		v, _ := val.([]int)
+		l = len(v)
+	case [][]int:
+		v, _ := val.([][]int)
+		l = len(v)
+	case []string:
+		v, _ := val.([]string)
+		l = len(v)
+	case [][]string:
+		v, _ := val.([][]string)
+		l = len(v)
+	default:
+		panic(fmt.Errorf("not support type: %s \n", reflect.TypeOf(val).String()))
+	}
+
+	if l > key {
+		return true
+	}
+	return false
 }

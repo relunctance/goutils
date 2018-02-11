@@ -1,4 +1,4 @@
-package slicelimit
+package offsetboundary
 
 import (
 	"testing"

@@ -1,7 +1,9 @@
-package slicelimit
+package offsetboundary
 
 import (
 	"fmt"
+
+	"github.com/relunctance/goutils/slice"
 )
 
 //多维数组使用offset和pagesize
@@ -82,4 +84,62 @@ func GetStartEndByItems(item []int) (start, end int) {
 	start = item[0]
 	end = item[len(item)-1] + 1
 	return
+}
+
+/**
+ *  indexData 原始 [][]int数组
+	offsetIndexData [][]int 经过筛选过后的数组
+	//如果结束 返回false
+	//没有结束 返回true
+*/
+func MultiIndexDataHasNext(indexData, offsetIndexData [][]int) bool {
+
+	if len(indexData) != len(offsetIndexData) {
+		panic(fmt.Errorf("[indexData] length  not eq [offsetIndexData] length"))
+	}
+
+	for key, indexdata := range indexData {
+		if len(indexdata) == 0 {
+			continue
+		}
+		if slice.IssetSlice(offsetIndexData, key) {
+			if len(offsetIndexData[key]) == 0 {
+				continue
+			}
+			if isend, _ := CheckIsOffsetEnd(indexdata, offsetIndexData[key]); !isend {
+				//dump.P("isend:%v , indexdata: %v , offsetIndexData[key]:%v\n", isend, indexdata, offsetIndexData[key])
+				return true
+			}
+		}
+	}
+	return false
+}
+
+func CheckIsOffsetEnd(indexData, offsetData []int) (isend bool, next_offset int) {
+	iLen := len(indexData)
+	oLen := len(offsetData)
+	//dump.Println("iLen:", iLen, "oLen:", oLen)
+	//iLen: 18 oLen: 10
+	//iLen: 16 oLen: 0
+	if oLen > iLen {
+		panic(fmt.Errorf("offsetData length:[%d] has max than indexData length:[%d]\n", oLen, iLen))
+	}
+
+	if iLen == 0 {
+		return false, 0
+	}
+
+	if oLen == 0 {
+		return false, 0
+	}
+
+	if iLen == oLen {
+		return true, 0
+	}
+
+	if offsetData[oLen-1] == indexData[iLen-1] {
+		return true, 0
+	}
+
+	return false, offsetData[oLen-1] + 1
 }

@@ -1,7 +1,7 @@
 /*
 一维数组:  获取边界
 */
-package slicelimit
+package offsetboundary
 
 import (
 	"errors"
