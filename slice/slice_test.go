@@ -81,3 +81,48 @@ func TestEndStringSlice(t *testing.T) {
 
 	})
 }
+
+func TestIssetSlice(t *testing.T) {
+	convey.Convey("测试是否slice下标是否设置:", t, func() {
+
+		convey.Convey("测试int数组:", func() {
+			arr := []int{0, 1, 2, 3}
+			convey.So(IssetSlice(arr, 0), convey.ShouldBeTrue)
+			convey.So(IssetSlice(arr, 100), convey.ShouldBeFalse)
+			arr2 := [][]int{
+				{0, 1, 2, 3, 4},
+				{5, 6, 7},
+			}
+			convey.So(IssetSlice(arr2, 0), convey.ShouldBeTrue)
+			convey.So(IssetSlice(arr2, 3), convey.ShouldBeFalse)
+
+		})
+
+		convey.Convey("测试string数组:", func() {
+			arr := []string{"a", "b", "c", "d"}
+			convey.So(IssetSlice(arr, 0), convey.ShouldBeTrue)
+			convey.So(IssetSlice(arr, 100), convey.ShouldBeFalse)
+			arr2 := [][]string{
+				{"a", "b", "c"},
+				{"d", "e", "f"},
+			}
+			convey.So(IssetSlice(arr2, 0), convey.ShouldBeTrue)
+			convey.So(IssetSlice(arr2, 3), convey.ShouldBeFalse)
+
+		})
+
+		convey.Convey("测试panic", func() {
+			type User struct {
+				Name string
+				Pass string
+			}
+			convey.So(func() {
+				arr := []User{
+					User{"a", "b"},
+					User{"c", "d"},
+				}
+				IssetSlice(arr, 0)
+			}, convey.ShouldPanic)
+		})
+	})
+}
