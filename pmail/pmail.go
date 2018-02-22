@@ -19,7 +19,7 @@ func NewPmail() *Pmail {
 	return p
 }
 
-//添加抄送人员
+//[可选] 添加抄送人员
 func (p *Pmail) AddCcUsers(ccUsers map[string]string) {
 	if len(ccUsers) == 0 {
 		return
@@ -29,7 +29,7 @@ func (p *Pmail) AddCcUsers(ccUsers map[string]string) {
 	}
 }
 
-//添加附件
+//[可选] 添加附件
 func (p *Pmail) AddAttachment(filepath string) error {
 	if _, err := os.Stat(filepath); err != nil { //文件存在的情况下, 进行添加附件
 		return err
@@ -55,13 +55,14 @@ type unencryptedAuth struct {
 	smtp.Auth
 }
 
-//重新 smtp.Auth 接口中Start函数
+//重写 smtp.Auth 接口中Start函数
 func (a *unencryptedAuth) Start(server *smtp.ServerInfo) (string, []byte, error) {
 	s := *server
 	s.TLS = true
 	return a.Auth.Start(&s)
 
 }
+
 func (p *Pmail) addDialer() {
 	if p.D == nil {
 		d := gomail.NewDialer(mail_smtp, mail_port, mail_user, mail_pass)
