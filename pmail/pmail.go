@@ -15,7 +15,7 @@ type Pmail struct {
 func NewPmail() *Pmail {
 	p := &Pmail{}
 	p.M = gomail.NewMessage()
-	p.M.SetHeader("From", mail_from) //来源主题	//这里必须出现@符号
+	p.M.SetHeader("From", mail_from) //来源主题
 	return p
 }
 
