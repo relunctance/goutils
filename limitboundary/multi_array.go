@@ -143,3 +143,30 @@ func CheckIsOffsetEnd(indexData, offsetData []int) (isend bool, next_offset int)
 
 	return false, offsetData[oLen-1] + 1
 }
+
+//获取二维数组结果
+func GetStringSlice(allData [][]string, offsetSlice [][]int) [][]string {
+	res := make([][]string, 0, len(offsetSlice))
+	for key, items := range offsetSlice {
+		if items == nil { //这里如果为nil 说明是跳过的
+			continue
+		}
+		start, end := GetStartEndByItems(items)
+		res = append(res, allData[key][start:end])
+	}
+	return res
+
+}
+
+//获取一维数组的结果
+func GetSingleStringSlice(allData [][]string, offsetSlice [][]int) (res []string) {
+
+	for key, items := range offsetSlice {
+		if items == nil { //这里如果为nil 说明是跳过的
+			continue
+		}
+		start, end := GetStartEndByItems(items)
+		res = append(res, allData[key][start:end]...)
+	}
+	return
+}
