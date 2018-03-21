@@ -43,3 +43,10 @@ func CheckIsEnd(err error) (bool, error) {
 	}
 	return false, nil
 }
+
+//获取HasNext
+func GetHasNext(err error) (bool, error) {
+    hasNext, err2 := CheckIsEnd(err)
+    hasNext = !hasNext
+    return hasNext, err2
+}
