@@ -1,11 +1,32 @@
 package offsetboundary
 
 import (
+	"errors"
 	"testing"
 
 	"github.com/relunctance/goutils/slice"
 	"github.com/smartystreets/goconvey/convey"
 )
+
+func TestGetGetHasNext(t *testing.T) {
+	convey.Convey("检测GetHasNext:", t, func() {
+		convey.Convey("开始检测:", func() {
+			var err error = EOF
+			hasNext, errRes := GetHasNext(err)
+			convey.So(errRes, convey.ShouldBeNil)
+			convey.So(hasNext, convey.ShouldBeFalse)
+			err = nil
+			hasNext, errRes = GetHasNext(err)
+			convey.So(hasNext, convey.ShouldBeTrue)
+			convey.So(errRes, convey.ShouldBeNil)
+			err = errors.New("Faild")
+			hasNext, errRes = GetHasNext(err)
+			convey.So(hasNext, convey.ShouldBeFalse)
+			convey.So(errRes, convey.ShouldNotBeNil)
+
+		})
+	})
+}
 
 func TestCheckIsEndPanic(t *testing.T) {
 	convey.Convey("检测CheckIsEnd是否报错", t, func() {

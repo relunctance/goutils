@@ -15,23 +15,22 @@ var data [][]string = [][]string{
 	[]string{"4a", "4b", "4c", "4d", "4e", "4f", "4g", "4h", "4i", "4j", "4k"}, //11
 }
 
-//获取数据结果
-func getData(arr [][]int) (res []string) {
+func TestGetStringSlice(t *testing.T) {
+	convey.Convey("测试根据索引二维数组获取string", t, func() {
 
-	for key, items := range arr {
-		if items == nil { //这里如果为nil 说明是跳过的
-			continue
-		}
-		start, end := GetStartEndByItems(items)
-		res = append(res, data[key][start:end]...)
-		/*
-			for _, v := range items {	//效率不好
-				res = append(res, data[key][v])
-			}
-		*/
-	}
-	return
+		res, el := GetStringSlice(data, [][]int{{0, 1, 2}, {5}})
+		convey.So(slice.CheckStringSliceEqual(res[0], []string{"1a", "1b", "1c"}), convey.ShouldBeTrue)
+		convey.So(slice.CheckStringSliceEqual(res[1], []string{"2f"}), convey.ShouldBeTrue)
+		convey.So(4, convey.ShouldEqual, el)
+
+		res, el = GetStringSlice(data, [][]int{nil, nil, {0, 1, 2}, {5, 6, 7}})
+		convey.So(slice.CheckStringSliceEqual(res[0], []string{"3a", "3b", "3c"}), convey.ShouldBeTrue)
+		convey.So(slice.CheckStringSliceEqual(res[1], []string{"4f", "4g", "4h"}), convey.ShouldBeTrue)
+		convey.So(6, convey.ShouldEqual, el)
+
+	})
 }
+
 func TestMultiIndexDataHasNext(t *testing.T) {
 	convey.Convey("测试二维索引数组是否结束", t, func() {
 		convey.Convey("测试返回bool:", func() {
@@ -169,8 +168,10 @@ func TestGetDyadicArrayByOffset(t *testing.T) {
 			convey.So(nil, convey.ShouldEqual, err)
 		})
 		convey.Convey("arr值判断1:", func() {
-			bl := slice.CheckStringSliceEqual(strings.Fields("1a 1b 1c 2a 2b 2c 2d 2e 2f 2g"), getData(arr))
+			strSlice, el := GetSingleStringSlice(data, arr)
+			bl := slice.CheckStringSliceEqual(strings.Fields("1a 1b 1c 2a 2b 2c 2d 2e 2f 2g"), strSlice)
 			convey.So(bl, convey.ShouldBeTrue)
+			convey.So(el, convey.ShouldEqual, 10)
 		})
 
 		err, arr = GetDyadicArrayByOffset(10000, pagesize, totalLength, multiDyadicArr)
@@ -184,20 +185,26 @@ func TestGetDyadicArrayByOffset(t *testing.T) {
 
 		err, arr = GetDyadicArrayByOffset(5, 10, totalLength, multiDyadicArr)
 		convey.Convey("arr值判断2:", func() {
-			bl := slice.CheckStringSliceEqual(strings.Fields("2c 2d 2e 2f 2g 3a 3b 3c 3d 3e"), getData(arr))
+			strSlice, el := GetSingleStringSlice(data, arr)
+			bl := slice.CheckStringSliceEqual(strings.Fields("2c 2d 2e 2f 2g 3a 3b 3c 3d 3e"), strSlice)
+			convey.So(el, convey.ShouldEqual, 10)
 			convey.So(bl, convey.ShouldBeTrue)
 			convey.So(err, convey.ShouldBeNil)
 		})
 		err, arr = GetDyadicArrayByOffset(3, 5, totalLength, multiDyadicArr)
 		convey.Convey("检测当start为边界时 , 是否报错问题:", func() {
-			bl := slice.CheckStringSliceEqual(strings.Fields("2a 2b 2c 2d 2e"), getData(arr))
+			strSlice, el := GetSingleStringSlice(data, arr)
+			bl := slice.CheckStringSliceEqual(strings.Fields("2a 2b 2c 2d 2e"), strSlice)
+			convey.So(el, convey.ShouldEqual, 5)
 			convey.So(bl, convey.ShouldBeTrue)
 			convey.So(err, convey.ShouldBeNil)
 
 		})
 		err, arr = GetDyadicArrayByOffset(0, 5000000, totalLength, multiDyadicArr)
 		convey.Convey("当pagesize过大时检测", func() {
-			bl := slice.CheckStringSliceEqual(strings.Fields("1a 1b 1c 2a 2b 2c 2d 2e 2f 2g 3a 3b 3c 3d 3e 3f 3g 3h 3i 4a 4b 4c 4d 4e 4f 4g 4h 4i 4j 4k"), getData(arr))
+			strSlice, el := GetSingleStringSlice(data, arr)
+			bl := slice.CheckStringSliceEqual(strings.Fields("1a 1b 1c 2a 2b 2c 2d 2e 2f 2g 3a 3b 3c 3d 3e 3f 3g 3h 3i 4a 4b 4c 4d 4e 4f 4g 4h 4i 4j 4k"), strSlice)
+			convey.So(el, convey.ShouldEqual, 30)
 			convey.So(bl, convey.ShouldBeTrue)
 			convey.So(err, convey.ShouldBeNil)
 
@@ -205,10 +212,12 @@ func TestGetDyadicArrayByOffset(t *testing.T) {
 
 		err, arr = GetDyadicArrayByOffset(13, 5000000, totalLength, multiDyadicArr)
 		convey.Convey("检测", func() {
-			bl := slice.CheckStringSliceEqual(strings.Fields("3d 3e 3f 3g 3h 3i 4a 4b 4c 4d 4e 4f 4g 4h 4i 4j 4k"), getData(arr))
+			strSlice, el := GetSingleStringSlice(data, arr)
+			bl := slice.CheckStringSliceEqual(strings.Fields("3d 3e 3f 3g 3h 3i 4a 4b 4c 4d 4e 4f 4g 4h 4i 4j 4k"), strSlice)
+			convey.So(el, convey.ShouldEqual, 17)
 			convey.So(bl, convey.ShouldBeTrue)
 			convey.So(err, convey.ShouldBeNil)
-			convey.So(len(getData(arr)), convey.ShouldEqual, int(totalLength-13))
+			convey.So(len(strSlice), convey.ShouldEqual, int(totalLength-13))
 		})
 	})
 }

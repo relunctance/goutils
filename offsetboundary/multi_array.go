@@ -2,8 +2,7 @@ package offsetboundary
 
 import (
 	"fmt"
-
-	"github.com/relunctance/goutils/slice"
+	"utils"
 )
 
 //多维数组使用offset和pagesize
@@ -102,7 +101,7 @@ func MultiIndexDataHasNext(indexData, offsetIndexData [][]int) bool {
 		if len(indexdata) == 0 {
 			continue
 		}
-		if slice.IssetSlice(offsetIndexData, key) {
+		if utils.IssetSlice(offsetIndexData, key) {
 			item := offsetIndexData[key]
 			isend, _ := CheckIsOffsetEnd(indexdata, item)
 			if !isend {
@@ -145,21 +144,25 @@ func CheckIsOffsetEnd(indexData, offsetData []int) (isend bool, next_offset int)
 }
 
 //获取二维数组结果
-func GetStringSlice(allData [][]string, offsetSlice [][]int) [][]string {
+func GetStringSlice(allData [][]string, offsetSlice [][]int) ([][]string, int) {
 	res := make([][]string, 0, len(offsetSlice))
+	var effectLength int
 	for key, items := range offsetSlice {
 		if items == nil { //这里如果为nil 说明是跳过的
 			continue
 		}
 		start, end := GetStartEndByItems(items)
-		res = append(res, allData[key][start:end])
+		tmpItem := allData[key][start:end]
+		effectLength += len(tmpItem)
+		res = append(res, tmpItem)
+
 	}
-	return res
+	return res, effectLength
 
 }
 
 //获取一维数组的结果
-func GetSingleStringSlice(allData [][]string, offsetSlice [][]int) (res []string) {
+func GetSingleStringSlice(allData [][]string, offsetSlice [][]int) (res []string, effectLength int) {
 
 	for key, items := range offsetSlice {
 		if items == nil { //这里如果为nil 说明是跳过的
@@ -168,5 +171,6 @@ func GetSingleStringSlice(allData [][]string, offsetSlice [][]int) (res []string
 		start, end := GetStartEndByItems(items)
 		res = append(res, allData[key][start:end]...)
 	}
+	effectLength = len(res)
 	return
 }
