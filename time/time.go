@@ -85,3 +85,23 @@ func Strtotime(format string, t time.Time) (T time.Time, err error) {
 	T = t.AddDate(year, month, day)
 	return
 }
+
+//示例:
+//" 2018-03-01 "
+//"2018-03-01 14:57:51"
+func Fstrtotime(dateStr string) (T time.Time, err error) {
+	dateStr = strings.TrimSpace(dateStr)
+	fieldarr := strings.Fields(dateStr)
+	if len(fieldarr) > 2 {
+		err = fmt.Errorf("format dateStr is error")
+		return
+	}
+	if len(fieldarr) == 1 {
+		return fmtdate.ParseDate(dateStr)
+	}
+
+	if len(fieldarr) == 2 {
+		return fmtdate.ParseDateTime(dateStr)
+	}
+	return
+}
