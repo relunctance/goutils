@@ -1,4 +1,4 @@
-package utils
+package ftime
 
 import (
 	"fmt"

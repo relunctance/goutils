@@ -1,7 +1,8 @@
-package time
+package ftime
 
 import (
 	"errors"
+	"fmt"
 	"strconv"
 	"strings"
 	"time"
