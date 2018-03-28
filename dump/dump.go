@@ -44,3 +44,8 @@ func SetColor(color string) {
 	}
 	ColorFormat = color
 }
+
+//还原默认颜色
+func SetDefaultColor() {
+	SetColor(COLOR_YELLOW)
+}
