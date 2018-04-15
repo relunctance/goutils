@@ -199,7 +199,7 @@ func TestDataTrunMulti(t *testing.T) {
 			convey.So(3, convey.ShouldEqual, len(arr["name-00"]))
 			convey.So(4, convey.ShouldEqual, len(arr["name-01"]))
 
-			//vals, err := Computation(data, "Name", "Pass")
+			vals, err := Computation(data, "Name", "Pass")
 			fmt.Println(vals, err)
 		})
 
