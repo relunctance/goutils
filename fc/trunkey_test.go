@@ -198,11 +198,32 @@ func TestDataTrunMulti(t *testing.T) {
 			convey.So(err, convey.ShouldBeNil)
 			convey.So(3, convey.ShouldEqual, len(arr["name-00"]))
 			convey.So(4, convey.ShouldEqual, len(arr["name-01"]))
-
-			vals, err := Computation(data, "Name", "Pass")
-			fmt.Println(vals, err)
 		})
 
+	})
+}
+func TestComputation(t *testing.T) {
+	convey.Convey("测试Computation", t, func() {
+
+		data := make([]*User, 0, 10)
+		data = append(data, newUser("name-00", "pass-00", 0))
+		data = append(data, newUser("name-00", "pass-01", 1))
+		data = append(data, newUser("name-00", "pass-02", 2))
+
+		data = append(data, newUser("name-01", "pass-01", 0))
+		data = append(data, newUser("name-01", "pass-02", 1))
+		data = append(data, newUser("name-01", "pass-03", 2))
+		data = append(data, newUser("name-01", "pass-04", 3))
+		vals, err := Computation(data, "Name", "Pass")
+		convey.So(err, convey.ShouldBeNil)
+		var v string
+		var ok bool
+		v, ok = vals["name-00"]
+		convey.So(ok, convey.ShouldBeTrue)
+		convey.So(v, convey.ShouldEqual, "pass-02") //只有数组才固定顺序
+		v, ok = vals["name-01"]
+		convey.So(ok, convey.ShouldBeTrue)
+		convey.So(v, convey.ShouldEqual, "pass-04") //只有数组才固定顺序 , 值应该为最后一个
 	})
 }
 

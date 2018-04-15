@@ -3,7 +3,6 @@ package fc
 import (
 	"errors"
 	"fmt"
-	"strings"
 
 	"reflect"
 )
@@ -180,9 +179,10 @@ func Computation(data interface{}, keyField, valueField string) (res map[string]
 	key := keyField + "+" + valueField
 	//使用闭包
 	buildData := func(item reflect.Value, key string) error {
-		field := strings.Split(key, "+")
+		field0 := key[0:len(keyField)]
+		field1 := key[len(keyField)+1:]
 		var Err error
-		s1, Err = getValueStringByKey(item, field[0])
+		s1, Err = getValueStringByKey(item, field0)
 		if Err != nil {
 			if Err == CONTINUE_ERR {
 				return nil
@@ -190,7 +190,7 @@ func Computation(data interface{}, keyField, valueField string) (res map[string]
 			return Err
 		}
 
-		s2, Err = getValueStringByKey(item, field[1])
+		s2, Err = getValueStringByKey(item, field1)
 		if Err != nil {
 			if Err == CONTINUE_ERR {
 				return nil
