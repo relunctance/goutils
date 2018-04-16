@@ -198,6 +198,13 @@ func TestDataTrunMulti(t *testing.T) {
 			convey.So(err, convey.ShouldBeNil)
 			convey.So(3, convey.ShouldEqual, len(arr["name-00"]))
 			convey.So(4, convey.ShouldEqual, len(arr["name-01"]))
+			for _, vals := range arr {
+				for _, val := range vals {
+					v, ok := val.(*User)
+					convey.So(ok, convey.ShouldBeTrue)
+					convey.So(v.Name[0:4], convey.ShouldEqual, "name")
+				}
+			}
 		})
 
 	})

@@ -45,7 +45,7 @@ func ArrayToSimple(data interface{}, key string) (res []string, err error) {
 }
 
 //根据value 获取对应的string 类型
-
+//支持[]*User []User , map[string]User , map[string]*User 类型的获取
 func getValueStringByKey(item reflect.Value, key string) (vstr string, err error) {
 	k := item.Kind()
 	if k == reflect.Ptr {
@@ -124,7 +124,7 @@ func commonBuild(data interface{}, key string, f F) (err error) {
 	v := reflect.ValueOf(data)
 	vk := v.Kind()
 	if vk != reflect.Slice && vk != reflect.Map {
-		err = errors.New("must Slice")
+		err = errors.New("must Slice or Map")
 		return
 	}
 
