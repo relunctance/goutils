@@ -3,6 +3,7 @@ package fc
 import (
 	"errors"
 	"fmt"
+	"sync"
 
 	"reflect"
 )
@@ -19,8 +20,12 @@ var (
 	ArrayToSimple(map[interface{}]*User , "Name")
 	ArrayToSimple(map[interface{}]User , "Name")
 */
+const (
+	CAPTION_NUM = 50 //定义容量
+)
+
 func ArrayToSimple(data interface{}, key string) (res []string, err error) {
-	res = make([]string, 0, 10)
+	res = make([]string, 0, CAPTION_NUM)
 	var s string
 	//使用闭包
 	buildData := func(item reflect.Value, key string) (Err error) {
@@ -89,7 +94,8 @@ DataTrunKey使用示例:
 	DataTrunKey(map[interface{}]User , "Name")
 */
 func DataTrunKey(data interface{}, key string) (res map[string]interface{}, err error) {
-	res = make(map[string]interface{})
+	l := new(sync.Mutex)
+	res = make(map[string]interface{}, CAPTION_NUM)
 	var s string
 	//使用闭包
 	buildData := func(item reflect.Value, key string) (Err error) {
@@ -101,7 +107,10 @@ func DataTrunKey(data interface{}, key string) (res map[string]interface{}, err 
 			return
 		}
 		if item.CanInterface() {
+
+			l.Lock()
 			res[s] = item.Interface()
+			l.Unlock()
 		}
 		return
 	}
@@ -146,7 +155,8 @@ func commonBuild(data interface{}, key string, f F) (err error) {
 }
 
 func DataTrunMulti(data interface{}, key string) (res map[string][]interface{}, err error) {
-	res = make(map[string][]interface{})
+	l := new(sync.Mutex)
+	res = make(map[string][]interface{}, CAPTION_NUM)
 	var s string
 	//使用闭包
 	buildData := func(item reflect.Value, key string) error {
@@ -159,11 +169,13 @@ func DataTrunMulti(data interface{}, key string) (res map[string][]interface{}, 
 			return Err
 		}
 		if item.CanInterface() {
+			l.Lock()
 			_, ok := res[s]
 			if !ok {
-				res[s] = make([]interface{}, 0, 5) //减少分配内存
+				res[s] = make([]interface{}, 0, CAPTION_NUM) //减少分配内存
 			}
 			res[s] = append(res[s], item.Interface())
+			l.Unlock()
 		}
 		return nil
 	}
@@ -173,7 +185,8 @@ func DataTrunMulti(data interface{}, key string) (res map[string][]interface{}, 
 
 //存在覆盖的情况
 func Computation(data interface{}, keyField, valueField string) (res map[string]string, err error) {
-	res = make(map[string]string)
+	l := new(sync.Mutex)
+	res = make(map[string]string, CAPTION_NUM)
 	var s1, s2 string
 
 	key := keyField + "+" + valueField
@@ -197,7 +210,9 @@ func Computation(data interface{}, keyField, valueField string) (res map[string]
 			}
 			return Err
 		}
+		l.Lock()
 		res[s1] = s2
+		l.Unlock()
 		return nil
 	}
 	err = commonBuild(data, key, buildData)
