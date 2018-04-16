@@ -227,6 +227,15 @@ func TestComputation(t *testing.T) {
 	})
 }
 
+func TestEverything2String(t *testing.T) {
+	convey.Convey("测试TestEverything2String:", t, func() {
+		str := everything2String([]string{"abcd"})
+		convey.So("[abcd]", convey.ShouldEqual, str)
+		str = everything2String("abc")
+		convey.So("abc", convey.ShouldEqual, str)
+	})
+}
+
 //去重
 func sliceStringUnique(slice []string) []string {
 	sort.Strings(slice)
