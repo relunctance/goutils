@@ -2,7 +2,8 @@ package offsetboundary
 
 import (
 	"fmt"
-	"utils"
+
+	"github.com/relunctance/goutils/slice"
 )
 
 //多维数组使用offset和pagesize
@@ -12,13 +13,28 @@ func GetDyadicArrayByOffset(offset, pagesize, totalNum int64, multiDyadicArr [][
 	var resultArr [][]int = make([][]int, len(multiDyadicArr))
 	if offset > totalNum {
 		err = fmt.Errorf("offset:[%d] has exceed DyadicArray TotalLength:[%d]  boundary", offset, totalNum)
-	}
-	errstr, start, _ := GetBoundary(offset, pagesize, totalNum)
-	//fmt.Println("start:", start)
-	if errstr != nil {
-		err = errstr
 		return err, resultArr
 	}
+
+	if offset == totalNum { //解决边界问题
+		err = EOF
+		return err, resultArr
+	}
+
+	errstr, start, _ := GetBoundary(offset, pagesize, totalNum)
+	if errstr != nil {
+		if errstr == EOF {
+			err = errstr
+		} else {
+			return err, resultArr
+		}
+	}
+
+	/*
+		if pagesize > totalNum { //直接全部取完了
+			return EOF, multiDyadicArr
+		}
+	*/
 
 	var psize int64 = pagesize
 	k := int64(0)
@@ -31,11 +47,9 @@ func GetDyadicArrayByOffset(offset, pagesize, totalNum int64, multiDyadicArr [][
 		}
 
 		_err, _start, _end := GetBoundary(start, psize, vl)
-		//fmt.Println("_start:", _start)
 		if _err != nil {
 			if _err == EOF {
 				start = 0
-				continue
 			} else {
 				panic(_err)
 			}
@@ -80,6 +94,9 @@ func BuildDyadicArray(data [][]string) ([][]int, int64) {
 
 //针对二维数组获取对应的start和end , 复杂度为O(1)
 func GetStartEndByItems(item []int) (start, end int) {
+	if len(item) == 0 || item == nil {
+		return
+	}
 	start = item[0]
 	end = item[len(item)-1] + 1
 	return
@@ -101,7 +118,7 @@ func MultiIndexDataHasNext(indexData, offsetIndexData [][]int) bool {
 		if len(indexdata) == 0 {
 			continue
 		}
-		if utils.IssetSlice(offsetIndexData, key) {
+		if slice.IssetSlice(offsetIndexData, key) {
 			item := offsetIndexData[key]
 			isend, _ := CheckIsOffsetEnd(indexdata, item)
 			if !isend {

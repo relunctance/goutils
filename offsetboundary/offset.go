@@ -19,22 +19,32 @@ func GetBoundary(offset, pagesize, length int64) (err error, start int64, end in
 		return
 	}
 
-	width := offset + pagesize
-	if width > length { // 当需要取的范围超过 数组最大长度时 , 直接返回从数组最后一位
-		start = offset
-		end = length
-		if start == end {
-			err = EOF //结束标识符
-		}
+	if offset == length { // 边界的情况
+		err = EOF
 		return
 	}
+
 	start = offset
+
+	if pagesize >= length {
+		end = length
+		err = EOF
+		return
+
+	}
+
+	width := offset + pagesize
+	if width >= length { // 当需要取的范围超过 数组最大长度时 , 直接返回从数组最后一位
+		end = length
+		err = EOF //结束标识符
+		return
+	}
 	end = width
 	return
 }
 
 //检测是否结束
-func CheckIsEnd(err error) (bool, error) {
+func checkIsEnd(err error) (bool, error) {
 	if err == EOF {
 		return true, nil
 	}
@@ -46,7 +56,7 @@ func CheckIsEnd(err error) (bool, error) {
 
 //获取HasNext
 func GetHasNext(err error) (bool, error) {
-    hasNext, err2 := CheckIsEnd(err)
-    hasNext = !hasNext
-    return hasNext, err2
+	hasNext, err2 := checkIsEnd(err)
+	hasNext = !hasNext
+	return hasNext, err2
 }

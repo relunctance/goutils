@@ -157,7 +157,31 @@ func TestGetDyadicArrayByOffset2(t *testing.T) {
 	})
 }
 
+func TestBuildDyadicArray(t *testing.T) {
+	convey.Convey("测试多维数组的搜索", t, func() {
+		arr := [][]string{}
+		mutliarr, num := BuildDyadicArray(arr)
+		convey.Convey("长度应该为0", func() {
+			convey.So(0, convey.ShouldEqual, len(mutliarr))
+		})
+		convey.Convey("结果应该为0", func() {
+			convey.So(num, convey.ShouldEqual, 0)
+		})
+
+		mutliarr, num = BuildDyadicArray(data)
+
+		convey.Convey("结果应该相等:数组长度", func() {
+			convey.So(len(mutliarr), convey.ShouldEqual, len(data))
+		})
+		convey.Convey("结果应该相等:总长", func() {
+			convey.So(30, convey.ShouldEqual, num)
+		})
+	})
+
+}
+
 func TestGetDyadicArrayByOffset(t *testing.T) {
+
 	convey.Convey("测试二维数组的offset,pagesize检索", t, func() {
 		multiDyadicArr, totalLength := BuildDyadicArray(data) //totalLength == 30
 
@@ -206,7 +230,7 @@ func TestGetDyadicArrayByOffset(t *testing.T) {
 			bl := slice.CheckStringSliceEqual(strings.Fields("1a 1b 1c 2a 2b 2c 2d 2e 2f 2g 3a 3b 3c 3d 3e 3f 3g 3h 3i 4a 4b 4c 4d 4e 4f 4g 4h 4i 4j 4k"), strSlice)
 			convey.So(el, convey.ShouldEqual, 30)
 			convey.So(bl, convey.ShouldBeTrue)
-			convey.So(err, convey.ShouldBeNil)
+			convey.So(err, convey.ShouldEqual, EOF)
 
 		})
 
@@ -216,31 +240,101 @@ func TestGetDyadicArrayByOffset(t *testing.T) {
 			bl := slice.CheckStringSliceEqual(strings.Fields("3d 3e 3f 3g 3h 3i 4a 4b 4c 4d 4e 4f 4g 4h 4i 4j 4k"), strSlice)
 			convey.So(el, convey.ShouldEqual, 17)
 			convey.So(bl, convey.ShouldBeTrue)
-			convey.So(err, convey.ShouldBeNil)
+			convey.So(err, convey.ShouldEqual, EOF)
 			convey.So(len(strSlice), convey.ShouldEqual, int(totalLength-13))
 		})
 	})
 }
 
-func TestBuildDyadicArray(t *testing.T) {
-	convey.Convey("测试多维数组的搜索", t, func() {
-		arr := [][]string{}
-		mutliarr, num := BuildDyadicArray(arr)
-		convey.Convey("长度应该为0", func() {
-			convey.So(0, convey.ShouldEqual, len(mutliarr))
-		})
-		convey.Convey("结果应该为0", func() {
-			convey.So(num, convey.ShouldEqual, 0)
-		})
+func TestMulGetDyadicArrayByOffset(t *testing.T) {
 
-		mutliarr, num = BuildDyadicArray(data)
+	convey.Convey("测试二维数组offsetboundy:", t, func() {
 
-		convey.Convey("结果应该相等:数组长度", func() {
-			convey.So(len(mutliarr), convey.ShouldEqual, len(data))
-		})
-		convey.Convey("结果应该相等:总长", func() {
-			convey.So(30, convey.ShouldEqual, num)
-		})
+		multiDyadicArr, totalLength := BuildDyadicArray(data) //totalLength == 30
+
+		//测试边界offset=30
+		err, arr := GetDyadicArrayByOffset(30, 1, totalLength, multiDyadicArr)
+		convey.So(err, convey.ShouldEqual, EOF)
+		convey.So(4, convey.ShouldEqual, len(arr))
+		convey.So(arr[0], convey.ShouldEqual, nil)
+		convey.So(arr[1], convey.ShouldEqual, nil)
+		convey.So(arr[2], convey.ShouldEqual, nil)
+		convey.So(arr[3], convey.ShouldEqual, nil)
+
+		var res []string
+		var effectLength int
+
+		err, arr = GetDyadicArrayByOffset(10, 3, totalLength, multiDyadicArr)
+		convey.So(err, convey.ShouldEqual, nil)
+		res, effectLength = GetSingleStringSlice(data, arr)
+		convey.So(3, convey.ShouldEqual, effectLength)
+		convey.So(checkStringSliceEqual(res, []string{"3a", "3b", "3c"}), convey.ShouldBeTrue)
+
+		err, arr = GetDyadicArrayByOffset(0, 100, totalLength, multiDyadicArr)
+		convey.So(err, convey.ShouldEqual, EOF)
+		res, effectLength = GetSingleStringSlice(data, arr)
+		convey.So(30, convey.ShouldEqual, effectLength)
+		convey.So(checkStringSliceEqual(res, strings.Fields("1a 1b 1c 2a 2b 2c 2d 2e 2f 2g 3a 3b 3c 3d 3e 3f 3g 3h 3i 4a 4b 4c 4d 4e 4f 4g 4h 4i 4j 4k")), convey.ShouldBeTrue)
+
+		err, arr = GetDyadicArrayByOffset(100, 100, totalLength, multiDyadicArr)
+		convey.So(err, convey.ShouldNotBeNil)
+		convey.So(4, convey.ShouldEqual, len(arr))
+
+		err, arr = GetDyadicArrayByOffset(0, 3, totalLength, multiDyadicArr)
+		convey.So(err, convey.ShouldEqual, nil)
+		res, effectLength = GetSingleStringSlice(data, arr)
+		convey.So(3, convey.ShouldEqual, effectLength)
+		convey.So(checkStringSliceEqual(res, []string{"1a", "1b", "1c"}), convey.ShouldBeTrue)
+
+		err, arr = GetDyadicArrayByOffset(0, 4, totalLength, multiDyadicArr)
+		convey.So(err, convey.ShouldEqual, nil)
+		res, effectLength = GetSingleStringSlice(data, arr)
+		convey.So(4, convey.ShouldEqual, effectLength)
+		convey.So(checkStringSliceEqual(res, []string{"1a", "1b", "1c", "2a"}), convey.ShouldBeTrue)
+
+		err, arr = GetDyadicArrayByOffset(3, 10, totalLength, multiDyadicArr)
+		convey.So(err, convey.ShouldEqual, nil)
+		res, effectLength = GetSingleStringSlice(data, arr)
+		convey.So(10, convey.ShouldEqual, effectLength)
+		convey.So(checkStringSliceEqual(res, strings.Fields("2a 2b 2c 2d 2e 2f 2g 3a 3b 3c")), convey.ShouldBeTrue)
+
+		err, arr = GetDyadicArrayByOffset(3, 7, totalLength, multiDyadicArr)
+		convey.So(err, convey.ShouldEqual, nil)
+		res, effectLength = GetSingleStringSlice(data, arr)
+		convey.So(7, convey.ShouldEqual, effectLength)
+		convey.So(checkStringSliceEqual(res, strings.Fields("2a 2b 2c 2d 2e 2f 2g")), convey.ShouldBeTrue)
+
+		err, arr = GetDyadicArrayByOffset(3, 27, totalLength, multiDyadicArr)
+		convey.So(err, convey.ShouldEqual, EOF)
+		res, effectLength = GetSingleStringSlice(data, arr)
+		convey.So(27, convey.ShouldEqual, effectLength)
+		convey.So(checkStringSliceEqual(res, strings.Fields("2a 2b 2c 2d 2e 2f 2g 3a 3b 3c 3d 3e 3f 3g 3h 3i 4a 4b 4c 4d 4e 4f 4g 4h 4i 4j 4k")), convey.ShouldBeTrue)
 	})
 
+}
+
+//检测slice是否相等
+func checkIntSliceEqual(x, y []int) bool {
+	if len(x) != len(y) {
+		return false
+	}
+	for i := range x {
+		if x[i] != y[i] {
+			return false
+		}
+	}
+	return true
+}
+
+//检测slice是否相等
+func checkStringSliceEqual(x, y []string) bool {
+	if len(x) != len(y) {
+		return false
+	}
+	for i := range x {
+		if x[i] != y[i] {
+			return false
+		}
+	}
+	return true
 }
