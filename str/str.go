@@ -1,6 +1,7 @@
 package str
 
 import (
+	"bytes"
 	"fmt"
 	"math"
 	"net/url"
@@ -56,4 +57,15 @@ func ParseStr(str string) url.Values {
 		panic(err)
 	}
 	return u.Query()
+}
+
+//首字母大写
+func Ucfirst(str string) string {
+	if len(str) == 0 {
+		return str
+	}
+	if len(str) == 1 {
+		return strings.ToUpper(str)
+	}
+	return string(bytes.ToUpper([]byte{str[0]})) + str[1:]
 }

@@ -61,3 +61,13 @@ func TestStrToInt32(t *testing.T) {
 		convey.So(err, convey.ShouldNotBeNil)
 	})
 }
+
+func TestUcFirst(t *testing.T) {
+	convey.Convey("测试UcFirst", t, func() {
+		convey.So("", convey.ShouldEqual, Ucfirst(""))
+		convey.So("Abc", convey.ShouldEqual, Ucfirst("abc"))
+		convey.So("A", convey.ShouldEqual, Ucfirst("a"))
+		convey.So("Dbc", convey.ShouldEqual, Ucfirst("Dbc"))
+		convey.So("1bc", convey.ShouldEqual, Ucfirst("1bc"))
+	})
+}
