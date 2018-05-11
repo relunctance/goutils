@@ -1,13 +1,13 @@
 package ranking
 
-type ItemWeigher interface {
+type Weigher interface {
 	//权重计算
-	WeigthCalc(ItemWeigher) bool
+	WeigthCalc(Weigher) bool
 	//计算权重返回的key
 	GroupKey() string
 }
 
-func Weigth(data []ItemWeigher, fc func(ItemWeigher)) {
+func Weigth(data []Weigher, fc func(Weigher)) {
 	if len(data) == 0 {
 		return
 	}
@@ -26,16 +26,16 @@ func Weigth(data []ItemWeigher, fc func(ItemWeigher)) {
 }
 
 type sortItems struct {
-	target ItemWeigher //最终需要的 , 用于比较
-	data   []ItemWeigher
+	target Weigher //最终需要的 , 用于比较
+	data   []Weigher
 }
 
-func (b *sortItems) addItem(item ItemWeigher) {
+func (b *sortItems) addItem(item Weigher) {
 	b.data = append(b.data, item)
 }
 
 //计算权重
-func (b *sortItems) calcWeigth() ItemWeigher {
+func (b *sortItems) calcWeigth() Weigher {
 	for _, data := range b.data {
 		if b.target == nil {
 			b.target = data

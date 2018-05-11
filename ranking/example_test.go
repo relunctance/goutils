@@ -5,7 +5,7 @@ import (
 	"sort"
 )
 
-var _ ItemWeigher = new(User) // 检测接口是否继承
+var _ Weigher = new(User) // 检测接口是否继承
 
 type User struct {
 	Name         string
@@ -19,7 +19,7 @@ func (u *User) GroupKey() string {
 }
 
 // expect max score user
-func (u *User) WeigthCalc(item ItemWeigher) bool {
+func (u *User) WeigthCalc(item Weigher) bool {
 	itemUser := item.(*User)
 	uScore := u.ChineseScore + u.EnglishScore
 	itemScore := itemUser.ChineseScore + itemUser.EnglishScore
@@ -27,7 +27,7 @@ func (u *User) WeigthCalc(item ItemWeigher) bool {
 }
 
 func ExampleWeigth() {
-	data := []ItemWeigher{
+	data := []Weigher{
 		&User{"xiaoming1", "class1", 80, 61}, // 141
 		&User{"xiaoming2", "class1", 33, 51}, // 84
 		&User{"xiaoming3", "class1", 49, 73}, // 122
@@ -45,7 +45,7 @@ func ExampleWeigth() {
 		&User{"xiaoming12", "class4", 99, 31}, // 130
 	}
 	values := make([]string, 0, 4)
-	Weigth(data, func(item ItemWeigher) {
+	Weigth(data, func(item Weigher) {
 		u := item.(*User)
 		values = append(values, fmt.Sprintf("name: %s , score: %d", u.Name, u.ChineseScore+u.EnglishScore))
 	})
