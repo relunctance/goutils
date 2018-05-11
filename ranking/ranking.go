@@ -2,12 +2,12 @@ package ranking
 
 type Weigher interface {
 	//权重计算
-	WeigthCalc(Weigher) bool
+	WeightCalc(Weigher) bool
 	//计算权重返回的key
 	GroupKey() string
 }
 
-func Weigth(data []Weigher, fc func(Weigher)) {
+func Weight(data []Weigher, fc func(Weigher)) {
 	if len(data) == 0 {
 		return
 	}
@@ -41,7 +41,7 @@ func (b *sortItems) calcWeigth() Weigher {
 			b.target = data
 			continue
 		}
-		if data.WeigthCalc(b.target) {
+		if data.WeightCalc(b.target) {
 			b.target = data //重新赋值
 			continue
 		}

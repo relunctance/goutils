@@ -19,7 +19,7 @@ func (u *User) GroupKey() string {
 }
 
 // expect max score user
-func (u *User) WeigthCalc(item Weigher) bool {
+func (u *User) WeightCalc(item Weigher) bool {
 	itemUser := item.(*User)
 	uScore := u.ChineseScore + u.EnglishScore
 	itemScore := itemUser.ChineseScore + itemUser.EnglishScore
@@ -45,7 +45,7 @@ func ExampleWeigth() {
 		&User{"xiaoming12", "class4", 99, 31}, // 130
 	}
 	values := make([]string, 0, 4)
-	Weigth(data, func(item Weigher) {
+	Weight(data, func(item Weigher) {
 		u := item.(*User)
 		values = append(values, fmt.Sprintf("name: %s , score: %d", u.Name, u.ChineseScore+u.EnglishScore))
 	})
