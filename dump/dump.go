@@ -7,7 +7,7 @@ const (
 	COLOR_DEFAULT = "__color__"
 	COLOR_YELLOW  = "\033[1;33;40m" + COLOR_DEFAULT + "\033[0m"
 	COLOR_GREEN   = "\033[1;32;40m" + COLOR_DEFAULT + "\033[0m"
-        COLOR_RED     = "\033[1;31;47m" + COLOR_DEFAULT + "\033[0m"
+	COLOR_RED     = "\033[1;31;47m" + COLOR_DEFAULT + "\033[0m"
 	COLOR_BLUE    = "\033[1;33;34m" + COLOR_DEFAULT + "\033[0m"
 )
 
