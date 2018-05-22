@@ -23,6 +23,18 @@ func InArrayInts(a int, arr []int) bool {
 
 }
 
+func InStringArray(v string, arr []string) bool {
+	if len(arr) == 0 {
+		return false
+	}
+	for _, val := range arr {
+		if v == val {
+			return true
+		}
+	}
+	return false
+}
+
 //检测slice []int是否相等
 func CheckIntSliceEqual(x, y []int) bool {
 	if len(x) != len(y) {
@@ -86,6 +98,12 @@ func IssetSlice(val interface{}, key int) bool {
 	case [][]string:
 		v, _ := val.([][]string)
 		l = len(v)
+	case []interface{}:
+		v, _ := val.([]interface{})
+		l = len(v)
+	case [][]interface{}:
+		v, _ := val.([][]interface{})
+		l = len(v)
 	default:
 		panic(fmt.Errorf("not support type: %s \n", reflect.TypeOf(val).String()))
 	}
@@ -94,4 +112,44 @@ func IssetSlice(val interface{}, key int) bool {
 		return true
 	}
 	return false
+}
+
+//去重
+func SliceStringUnique(slice []string) []string {
+	sort.Strings(slice)
+	i := 0
+	var j int
+	for {
+		if i >= len(slice)-1 {
+			break
+		}
+		for j = i + 1; j < len(slice) && slice[i] == slice[j]; j++ {
+		}
+		slice = append(slice[:i+1], slice[j:]...)
+		i++
+	}
+	return slice
+
+}
+
+// 去重+合并
+func SliceStringMerge(a, b []string) []string {
+	return SliceStringUnion(a, b)
+}
+
+// 交集
+func SliceStringIntersect(a, b []string) []string {
+	ret := make([]string, 0, len(b))
+	for _, val := range b {
+		if InStringArray(val, a) {
+			ret = append(ret, val)
+		}
+	}
+	return ret
+}
+
+// 并集
+func SliceStringUnion(a, b []string) []string {
+	a = append(a, b...)
+	return SliceStringUnique(a)
 }
