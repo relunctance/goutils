@@ -2,6 +2,7 @@ package str
 
 import (
 	"bytes"
+	"crypto/md5"
 	"fmt"
 	"math"
 	"net/url"
@@ -68,4 +69,13 @@ func Ucfirst(str string) string {
 		return strings.ToUpper(str)
 	}
 	return string(bytes.ToUpper([]byte{str[0]})) + str[1:]
+}
+
+// md5 计算
+func Md5(str string) string {
+	return fmt.Sprintf("%x", md5.Sum([]byte(str)))
+}
+
+func Md5Bytes(v []byte) string {
+	return fmt.Sprintf("%x", md5.Sum(v))
 }
