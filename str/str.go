@@ -79,3 +79,22 @@ func Md5(str string) string {
 func Md5Bytes(v []byte) string {
 	return fmt.Sprintf("%x", md5.Sum(v))
 }
+
+func ByteFormat(i uint64) string {
+	var a = []string{"B", "KB", "MB", "GB", "TB", "PB", "EB", "ZB", "YB", "UnKnown"}
+	var pos int = 0
+	var j float64 = float64(i)
+	for {
+		if i >= 1024 {
+			i = i / 1024
+			j = j / 1024
+			pos++
+		} else {
+			break
+		}
+	}
+	if pos >= len(a) { // fixed out index bug
+		pos = len(a) - 1
+	}
+	return fmt.Sprintf("%f %s", j, a[pos])
+}
