@@ -2,4 +2,4 @@ test:
 
 
 clean:
-	echo "clean"
+	echo "clean end"
