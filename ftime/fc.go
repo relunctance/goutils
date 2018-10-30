@@ -1,5 +1,7 @@
 package ftime
 
+import "time"
+
 // 返回微秒 , unix
 func Microtime() (millisecond float64, unix int) {
 	t := time.Now()
