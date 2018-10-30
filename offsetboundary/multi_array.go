@@ -3,7 +3,7 @@ package offsetboundary
 import (
 	"fmt"
 
-	"github.com/relunctance/goutils/slice"
+	"github.com/relunctance/goutils/fc"
 )
 
 //多维数组使用offset和pagesize
@@ -118,7 +118,7 @@ func MultiIndexDataHasNext(indexData, offsetIndexData [][]int) bool {
 		if len(indexdata) == 0 {
 			continue
 		}
-		if slice.IssetSlice(offsetIndexData, key) {
+		if fc.IssetSlice(offsetIndexData, key) {
 			item := offsetIndexData[key]
 			isend, _ := CheckIsOffsetEnd(indexdata, item)
 			if !isend {
