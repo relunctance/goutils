@@ -10,3 +10,10 @@ func Random() float64 {
 	r := rand.New(source)
 	return r.Float64()
 }
+
+// Rand between [min ~ max]
+func Rand(min, max int) int {
+    source := rand.NewSource(time.Now().UnixNano())
+    r := rand.New(source)
+    return r.Intn(max-min) + min
+}
