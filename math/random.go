@@ -15,5 +15,9 @@ func Random() float64 {
 func Rand(min, max int) int {
     source := rand.NewSource(time.Now().UnixNano())
     r := rand.New(source)
-    return r.Intn(max-min) + min
+    v := max - min
+    if v <= 0 {
+        v = 1
+    }
+    return r.Intn(v) + min
 }
