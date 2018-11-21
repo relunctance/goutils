@@ -2,7 +2,6 @@ package fc
 
 import (
 	"os"
-	"path/filepath"
 )
 
 // check filepath is exists
