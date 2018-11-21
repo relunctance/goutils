@@ -11,6 +11,17 @@ func Random() float64 {
 	return r.Float64()
 }
 
+
+// shuffle int slice
+func ShuffleInt(arr []int) []int {
+    for i := len(arr) - 1; i >= 0; i-- {
+        p := Rand(0, i)
+        arr[i], arr[p] = arr[p], arr[i]
+    }
+    return arr
+}
+
+
 // Rand between [min ~ max]
 func Rand(min, max int) int {
     source := rand.NewSource(time.Now().UnixNano())
