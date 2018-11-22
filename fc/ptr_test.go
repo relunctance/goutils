@@ -18,6 +18,32 @@ func (u *UserDemo) getpass() string {
 	return u.pass
 }
 
+func TestGetPtrValueByName(t *testing.T) {
+	user := &UserDemo{Name: "hello", pass: "abc"}
+	v, err := GetPtrValueByField("Name", user)
+	if err != nil {
+		t.Fatalf("should be nil , err:%#v\n", err)
+	}
+	switch val := v.(type) {
+	case string:
+		if val != "hello" {
+			t.Fatalf("should be equal 'hello'")
+		}
+	default:
+		t.Fatalf("should be string \n")
+	}
+
+	_, err = GetPtrValueByField("Name2", user)
+	if err == nil {
+		t.Fatalf("should be not nil")
+	}
+
+	_, err = GetPtrValueByField("pass", user)
+	if err == nil {
+		t.Fatalf("should be not nil")
+	}
+
+}
 func TestIsPtr(t *testing.T) {
 	convey.Convey("检测IsPtr()函数", t, func() {
 		convey.So(IsPtr(1), convey.ShouldBeFalse)

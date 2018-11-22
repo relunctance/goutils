@@ -11,6 +11,23 @@ func IsPtr(value interface{}) bool {
 	return v.Kind() == reflect.Ptr
 }
 
+// 根据字段Name 获取索引
+func GetPtrValueByField(field string, ptr interface{}) (interface{}, error) {
+	if !IsPtr(ptr) {
+		return nil, fmt.Errorf("must input a *ptr")
+	}
+	e := reflect.ValueOf(ptr).Elem()
+	_, ok := e.Type().FieldByName(field)
+	if !ok {
+		return nil, fmt.Errorf("not exists field: %s", field)
+	}
+	val := e.FieldByName(field)
+	if !val.CanInterface() {
+		return nil, fmt.Errorf("value is private not can visited , field [%s] should be set public", field)
+	}
+	return val.Interface(), nil
+}
+
 // 检测字段是否存在
 // 支持[private]字段检测
 // 支持[public]字段检测
