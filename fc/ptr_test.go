@@ -20,7 +20,7 @@ func (u *UserDemo) getpass() string {
 
 func TestGetPtrValueByName(t *testing.T) {
 	user := &UserDemo{Name: "hello", pass: "abc"}
-	v, err := GetPtrValueByField("Name", user)
+	v, err := ValueFromPtr("Name", user)
 	if err != nil {
 		t.Fatalf("should be nil , err:%#v\n", err)
 	}
@@ -33,12 +33,12 @@ func TestGetPtrValueByName(t *testing.T) {
 		t.Fatalf("should be string \n")
 	}
 
-	_, err = GetPtrValueByField("Name2", user)
+	_, err = ValueFromPtr("Name2", user)
 	if err == nil {
 		t.Fatalf("should be not nil")
 	}
 
-	_, err = GetPtrValueByField("pass", user)
+	_, err = ValueFromPtr("pass", user)
 	if err == nil {
 		t.Fatalf("should be not nil")
 	}

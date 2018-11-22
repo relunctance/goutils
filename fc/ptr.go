@@ -12,7 +12,8 @@ func IsPtr(value interface{}) bool {
 }
 
 // 根据字段Name 获取索引
-func GetPtrValueByField(field string, ptr interface{}) (interface{}, error) {
+
+func ValueFromPtr(field string, ptr interface{}) (interface{}, error) {
 	if !IsPtr(ptr) {
 		return nil, fmt.Errorf("must input a *ptr")
 	}
