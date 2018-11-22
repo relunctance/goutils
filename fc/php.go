@@ -1,5 +1,10 @@
 package fc
 
+import (
+	"fmt"
+	"os"
+)
+
 /*
 Returns a string with backslashes added before characters that need to be escaped. These characters are:
 
@@ -33,4 +38,15 @@ func Stripslashes(str string) string {
 		ret = append(ret, rune(str[i]))
 	}
 	return string(ret)
+}
+
+// 使用当前时间纳秒+hostname+pid的唯一ID
+// prefix用于解决结果碰撞问题
+// length =  26
+func Uniqid(prefix string) string {
+	f := Random()
+	h, _ := os.Hostname()
+	h = Md5(fmt.Sprintf("%s-%d-%f", h, os.Getpid(), f))
+	fs := fmt.Sprintf("%f", f)
+	return prefix + h[0:20] + fs[2:]
 }
