@@ -2,6 +2,7 @@ package fc
 
 import (
 	"os"
+	"syscall"
 )
 
 // check filepath is exists
@@ -11,6 +12,15 @@ func IsExist(filename string) bool {
 
 	return err == nil
 }
+
+// check file or dir is writeable
+func IsWriteable(name string) bool {                                                                                  
+    err := syscall.Access(name, syscall.O_RDWR)                                                                       
+    if err == nil {                                                                                                   
+        return true                                                                                                   
+    }                                                                                                                 
+    return false                                                                                                      
+}  
 
 // get file size by filepath
 func FileSize(filename string) int64 {
