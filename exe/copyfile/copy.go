@@ -26,7 +26,7 @@ func main() {
 	flag.StringVar(&output, "output", "", "the copy input dir, the type should be dir")
 	flag.BoolVar(&cover, "cover", false, "is cover exists file")
 	flag.BoolVar(&checksize, "check", true, "is check size when use -cover=true")
-	flag.IntVar(&maxnum, "maxnum", 100, "the max size channel num")
+	flag.IntVar(&maxnum, "maxnum", 50, "the num size  of channel , max limit is 100")
 	flag.Parse()
 	fmt.Println("---------------------------------\n")
 	fmt.Println("input:", input)
@@ -35,6 +35,10 @@ func main() {
 	fmt.Println("check:", checksize)
 	fmt.Println("maxnum:", maxnum)
 	fmt.Println("\n---------------------------------\n")
+
+	if maxnum > 100 {
+		maxnum = 100
+	}
 	input = strings.TrimRight(input, "/")
 	output = strings.TrimRight(output, "/")
 	if input == "" || output == "" {
