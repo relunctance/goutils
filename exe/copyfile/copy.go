@@ -11,6 +11,9 @@ import (
 	"strings"
 	"syscall"
 	"time"
+
+	"github.com/relunctance/goutils/dump"
+	"github.com/relunctance/goutils/fc"
 )
 
 var input string
@@ -21,7 +24,7 @@ var maxnum int
 var version string
 
 func main() {
-	start_time := time.Now()
+	startTime := time.Now()
 	flag.StringVar(&input, "version", "1.0.0.1001", "copy version")
 	flag.StringVar(&input, "input", "", "the copy input dir , the type should be dir")
 	flag.StringVar(&output, "output", "", "the copy input dir, the type should be dir")
@@ -60,7 +63,7 @@ func main() {
 		copyByNames(vs)
 		//time.Sleep(1 * time.Second) //等待1秒
 	}
-	log.Printf("all cost time: [%s]\n", time.Now().Sub(start_time).String())
+	log.Printf("all cost time: [%s]\n", time.Now().Sub(startTime).String())
 }
 
 func copyByNames(names []string) {
@@ -70,13 +73,16 @@ func copyByNames(names []string) {
 		return
 	}
 
+	startTime := time.Now()
 	ch := make(chan string, l)
 	defer close(ch)
+	var sizeTotal int64
 	for _, name := range names {
 		name = strings.TrimRight(name, "\n")
 
 		go func(filename string) {
-			err := copyFile(filename, input, output, ch)
+			size, err := copyFile(filename, input, output, ch)
+			sizeTotal += size
 			if err != nil {
 				panic(err)
 			}
@@ -85,8 +91,14 @@ func copyByNames(names []string) {
 	}
 
 	for i := 0; i < l; i++ {
-		log.Printf("[%s] is ok\n", <-ch)
+		_ = <-ch
 	}
+	costTime := time.Now().Sub(startTime)
+	sec := costTime.Seconds()
+	speedk := float64(sizeTotal) / sec / 1024
+	speedM := speedk / 1024
+
+	dump.Printf("file num: [%d] , cost time: [%s] , total Byte:[%d] , total Format:[%s] speed Kb: [ %.3f Kb/s] , speed Mb [%.3f Mb/s]\n", l, costTime.String(), sizeTotal, fc.ByteFormat(float64(sizeTotal)), speedk, speedM)
 }
 
 func copy(src, dst string) (int64, error) {
@@ -113,13 +125,13 @@ func copy(src, dst string) (int64, error) {
 	return nBytes, err
 }
 
-func copyFile(filename string, input, output string, ch chan string) error {
+func copyFile(filename string, input, output string, ch chan string) (int64, error) {
 	if !IsWriteable(output) {
-		return fmt.Errorf("[%s] is not writeable \n", output)
+		return 0, fmt.Errorf("[%s] is not writeable \n", output)
 	}
 	src := input + "/" + filename
 	if !IsExist(src) {
-		return fmt.Errorf("not exists [%s]\n", src)
+		return 0, fmt.Errorf("not exists [%s]\n", src)
 	}
 	dst := output + "/" + filename
 
@@ -128,7 +140,7 @@ func copyFile(filename string, input, output string, ch chan string) error {
 		if !cover && FileSize(src) == dstsize {
 			log.Printf("the same filesize [%d] , ignore [%s] \n", dstsize, dst)
 			ch <- filename
-			return nil
+			return 0, nil
 		}
 	}
 	size, err := copy(src, dst)
@@ -137,7 +149,7 @@ func copyFile(filename string, input, output string, ch chan string) error {
 	}
 	log.Printf("copy [%s/%s] to [%s/%s] , size:%d \n", input, filename, output, filename, size)
 	ch <- filename
-	return err
+	return size, err
 }
 
 func fileNames(input string) []string {
