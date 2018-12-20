@@ -20,6 +20,7 @@ var maxnum int
 var version string
 
 func main() {
+	start_time := time.Now()
 	flag.StringVar(&input, "version", "1.0.0.1001", "copy version")
 	flag.StringVar(&input, "input", "", "the copy input dir , the type should be dir")
 	flag.StringVar(&output, "output", "", "the copy input dir, the type should be dir")
@@ -52,8 +53,9 @@ func main() {
 	sliceNames := SliceChunk(names, maxnum) //每次最多并发maxnum个
 	for _, vs := range sliceNames {
 		copyByNames(vs)
-		time.Sleep(1 * time.Second) //等待1秒
+		//time.Sleep(1 * time.Second) //等待1秒
 	}
+	log.Printf("all cost time: [%s]\n", time.Now().Sub(start_time).String())
 }
 
 func copyByNames(names []string) {
