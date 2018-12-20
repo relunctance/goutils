@@ -9,24 +9,30 @@ import (
 	"os"
 	"strings"
 	"syscall"
+	"time"
 )
 
 var input string
 var output string
 var cover bool
 var checksize bool
+var maxnum int
+var version string
 
 func main() {
+	flag.StringVar(&input, "version", "1.0.0.1001", "copy version")
 	flag.StringVar(&input, "input", "", "the copy input dir , the type should be dir")
 	flag.StringVar(&output, "output", "", "the copy input dir, the type should be dir")
 	flag.BoolVar(&cover, "cover", false, "is cover exists file")
 	flag.BoolVar(&checksize, "check", true, "is check size when use -cover=true")
+	flag.IntVar(&maxnum, "maxnum", 100, "the max size channel num")
 	flag.Parse()
 	fmt.Println("---------------------------------\n")
 	fmt.Println("input:", input)
 	fmt.Println("output:", output)
 	fmt.Println("cover:", cover)
 	fmt.Println("check:", checksize)
+	fmt.Println("maxnum:", maxnum)
 	fmt.Println("\n---------------------------------\n")
 	input = strings.TrimRight(input, "/")
 	output = strings.TrimRight(output, "/")
@@ -43,6 +49,14 @@ func main() {
 	}
 
 	names := fileNames(input)
+	sliceNames := SliceChunk(names, maxnum) //每次最多并发maxnum个
+	for _, vs := range sliceNames {
+		copyByNames(vs)
+		time.Sleep(1 * time.Second) //等待1秒
+	}
+}
+
+func copyByNames(names []string) {
 	l := len(names)
 	if l == 0 {
 		log.Printf("input dir: [%s] is a empty dir\n", input)
@@ -50,6 +64,7 @@ func main() {
 	}
 
 	ch := make(chan string, l)
+	defer close(ch)
 	for _, name := range names {
 		name = strings.TrimRight(name, "\n")
 
@@ -63,7 +78,7 @@ func main() {
 	}
 
 	for i := 0; i < l; i++ {
-		fmt.Printf("[%s] is ok\n", <-ch)
+		log.Printf("[%s] is ok\n", <-ch)
 	}
 }
 
@@ -183,4 +198,17 @@ func FileSize(filename string) int64 {
 	}
 
 	return 0
+}
+
+func SliceChunk(slice []string, size int) (chunkslice [][]string) {
+	if size >= len(slice) {
+		chunkslice = append(chunkslice, slice)
+		return
+	}
+	end := size
+	for i := 0; i <= (len(slice) - size); i += size {
+		chunkslice = append(chunkslice, slice[i:end])
+		end += size
+	}
+	return
 }
