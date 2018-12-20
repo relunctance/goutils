@@ -98,7 +98,7 @@ func copyByNames(names []string) {
 	speedk := float64(sizeTotal) / sec / 1024
 	speedM := speedk / 1024
 
-	dump.Printf("file num: [%d] , cost time: [%s] , total Byte:[%d] , total Format:[%s] speed Kb: [ %.3f Kb/s] , speed Mb [%.3f Mb/s]\n", l, costTime.String(), sizeTotal, fc.ByteFormat(float64(sizeTotal)), speedk, speedM)
+	dump.Printf("file num: [%d] , cost time: [%s] , total Byte:[%d Byte] , total Format:[%s] speed Kb: [ %.3f Kb/s] , speed Mb [%.3f Mb/s]\n", l, costTime.String(), sizeTotal, fc.ByteFormat(float64(sizeTotal)), speedk, speedM)
 }
 
 func copy(src, dst string) (int64, error) {
