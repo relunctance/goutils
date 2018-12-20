@@ -4,12 +4,11 @@ import (
 	"flag"
 	"fmt"
 	"io"
+	"io/ioutil"
 	"log"
 	"os"
 	"strings"
 	"syscall"
-
-	"github.com/relunctance/goutils/cmd"
 )
 
 var input string
@@ -27,6 +26,7 @@ func main() {
 	fmt.Println("input:", input)
 	fmt.Println("output:", output)
 	fmt.Println("cover:", cover)
+	fmt.Println("check:", checksize)
 	fmt.Println("\n---------------------------------\n")
 	input = strings.TrimRight(input, "/")
 	output = strings.TrimRight(output, "/")
@@ -123,12 +123,26 @@ func fileNames(input string) []string {
 	if !IsReadable(input) {
 		panic(fmt.Errorf("[%s] is not readable\n", input))
 	}
-	code := fmt.Sprintf("ls %s", input)
-	data, err := cmd.RunCommandOutputString(code)
+	//code := fmt.Sprintf("ls %s", input)
+	//data, err := cmd.RunCommandOutputString(code)
+	data, err := GetDirFileNames(input)
 	if err != nil {
 		panic(err)
 	}
 	return data
+}
+
+func GetDirFileNames(src string) ([]string, error) {
+	rd, err := ioutil.ReadDir(src)
+	data := make([]string, 0, 1000)
+	for _, fi := range rd {
+		if fi.IsDir() {
+			continue
+			//GetAllFile(src + fi.Name() + "\\")
+		}
+		data = append(data, fi.Name())
+	}
+	return data, err
 }
 
 func checkPath(path string) error {
@@ -136,7 +150,7 @@ func checkPath(path string) error {
 		return fmt.Errorf("output is empty\n")
 	}
 	if !IsExist(path) {
-		return fmt.Errorf("[%s] is not exists\n")
+		return fmt.Errorf("[%s] is not exists\n", path)
 	}
 	return nil
 }
