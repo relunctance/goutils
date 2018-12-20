@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"log"
 	"os"
+	"sort"
 	"strings"
 	"syscall"
 	"time"
@@ -150,6 +151,7 @@ func fileNames(input string) []string {
 	if err != nil {
 		panic(err)
 	}
+	sort.Strings(data)
 	return data
 }
 
