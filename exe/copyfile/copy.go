@@ -9,7 +9,6 @@ import (
 	"os"
 	"sort"
 	"strings"
-	"syscall"
 	"time"
 
 	"github.com/relunctance/goutils/dump"
@@ -58,7 +57,8 @@ func main() {
 	}
 
 	names := fileNames(input)
-	sliceNames := SliceChunk(names, maxnum) //每次最多并发maxnum个
+	sliceNames := fc.SliceChunk(names, maxnum) //每次最多并发maxnum个
+	fmt.Println("sliceNames:", sliceNames)
 	for _, vs := range sliceNames {
 		copyByNames(vs)
 		//time.Sleep(1 * time.Second) //等待1秒
@@ -126,18 +126,18 @@ func copy(src, dst string) (int64, error) {
 }
 
 func copyFile(filename string, input, output string, ch chan string) (int64, error) {
-	if !IsWriteable(output) {
+	if !fc.IsWriteable(output) {
 		return 0, fmt.Errorf("[%s] is not writeable \n", output)
 	}
 	src := input + "/" + filename
-	if !IsExist(src) {
+	if !fc.IsExist(src) {
 		return 0, fmt.Errorf("not exists [%s]\n", src)
 	}
 	dst := output + "/" + filename
 
-	if IsExist(dst) {
-		dstsize := FileSize(dst)
-		if !cover && FileSize(src) == dstsize {
+	if fc.IsExist(dst) {
+		dstsize := fc.FileSize(dst)
+		if !cover && fc.FileSize(src) == dstsize {
 			log.Printf("the same filesize [%d] , ignore [%s] \n", dstsize, dst)
 			ch <- filename
 			return 0, nil
@@ -154,12 +154,16 @@ func copyFile(filename string, input, output string, ch chan string) (int64, err
 
 func fileNames(input string) []string {
 	input = strings.TrimRight(input, "/")
-	if !IsReadable(input) {
+	if !fc.IsReadable(input) {
 		panic(fmt.Errorf("[%s] is not readable\n", input))
 	}
 	//code := fmt.Sprintf("ls %s", input)
 	//data, err := cmd.RunCommandOutputString(code)
 	data, err := GetDirFileNames(input)
+	dump.SetColor(dump.COLOR_RED)
+	dump.Println("names length:", len(data))
+	fmt.Println(data)
+	dump.SetDefaultColor()
 	if err != nil {
 		panic(err)
 	}
@@ -184,51 +188,8 @@ func checkPath(path string) error {
 	if len(path) == 0 {
 		return fmt.Errorf("output is empty\n")
 	}
-	if !IsExist(path) {
+	if !fc.IsExist(path) {
 		return fmt.Errorf("[%s] is not exists\n", path)
 	}
 	return nil
-}
-
-func IsExist(filename string) bool {
-	_, err := os.Stat(filename)
-
-	return err == nil
-}
-
-func IsReadable(name string) bool {
-	err := syscall.Access(name, syscall.O_RDONLY)
-	if err == nil {
-		return true
-	}
-	return false
-}
-
-func IsWriteable(name string) bool {
-	err := syscall.Access(name, syscall.O_RDWR)
-	if err == nil {
-		return true
-	}
-	return false
-}
-
-func FileSize(filename string) int64 {
-	if info, err := os.Stat(filename); err == nil {
-		return info.Size()
-	}
-
-	return 0
-}
-
-func SliceChunk(slice []string, size int) (chunkslice [][]string) {
-	if size >= len(slice) {
-		chunkslice = append(chunkslice, slice)
-		return
-	}
-	end := size
-	for i := 0; i <= (len(slice) - size); i += size {
-		chunkslice = append(chunkslice, slice[i:end])
-		end += size
-	}
-	return
 }
