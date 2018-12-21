@@ -58,7 +58,6 @@ func main() {
 
 	names := fileNames(input)
 	sliceNames := fc.SliceChunk(names, maxnum) //每次最多并发maxnum个
-	fmt.Println("sliceNames:", sliceNames)
 	for _, vs := range sliceNames {
 		copyByNames(vs)
 		//time.Sleep(1 * time.Second) //等待1秒
@@ -160,10 +159,7 @@ func fileNames(input string) []string {
 	//code := fmt.Sprintf("ls %s", input)
 	//data, err := cmd.RunCommandOutputString(code)
 	data, err := GetDirFileNames(input)
-	dump.SetColor(dump.COLOR_RED)
 	dump.Println("names length:", len(data))
-	fmt.Println(data)
-	dump.SetDefaultColor()
 	if err != nil {
 		panic(err)
 	}
