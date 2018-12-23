@@ -1,4 +1,4 @@
-# copy command  (Same as Linux cp)
+# 并发Copy命令  (Same as Linux cp)
 
 ## 如何安装
 
@@ -25,5 +25,5 @@ Usage of ./copy:
 
 ## 使用示例：
 ```
-./copy -input "you input dir" -outpu "you output dir" 
+./copy -input "you input dir" -output "you output dir" 
 ```
