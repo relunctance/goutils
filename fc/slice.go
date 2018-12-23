@@ -88,11 +88,16 @@ func IssetSlice(val interface{}, key int) bool {
 
 //元素存在数组检测函数
 func InArrayInts(a int, arr []int) bool {
-	if !sort.IntsAreSorted(arr) {
-		panic(fmt.Errorf("must be are sorted arr"))
-	}
 	l := len(arr)
 	if l == 0 {
+		return false
+	}
+	if !sort.IntsAreSorted(arr) {
+		for _, v := range arr {
+			if a == v {
+				return true
+			}
+		}
 		return false
 	}
 	key := sort.SearchInts(arr, a) //源码实现是使用二分法实现的, 效率比 for :range 高
