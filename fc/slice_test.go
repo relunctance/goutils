@@ -1,11 +1,24 @@
 package fc
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/smartystreets/goconvey/convey"
 )
 
+func TestSliceDiff(t *testing.T) {
+
+	arr1 := []string{"a", "f", "b", "c", "g", "e", "i"}
+	arr2 := []string{"c", "b", "d"}
+	arr3 := []string{"d", "e"}
+	arr := SliceStringDiff(arr1, arr2, arr3)
+	fmt.Println(arr)
+	if !CheckStringSliceEqual(arr, []string{"a", "f", "g", "i"}) {
+
+		t.Fatalf("should be equal")
+	}
+}
 func TestInIntsArray(t *testing.T) {
 	//arr := []int{1, 2, 3, 4, 5, 6}
 	//InStringArray(3, arr)

@@ -6,6 +6,33 @@ import (
 	"sort"
 )
 
+// diff slice
+// Compares arr1 against one or more other arrays and returns the values in arr1 that are not present in any of the other arrays.
+func SliceStringDiff(arr1 []string, arrs ...[]string) (data []string) {
+	if len(arrs) == 0 {
+		return arr1
+	}
+	i := 0
+loop:
+	for {
+		if i == len(arr1) {
+			break
+		}
+		v := arr1[i]
+		for _, arr := range arrs {
+			for _, val := range arr {
+				if v == val {
+					i++
+					continue loop
+				}
+			}
+		}
+		data = append(data, v)
+		i++
+	}
+	return
+
+}
 func SliceChunk(data []string, chunkSize int) (divided [][]string) {
 
 	l := len(data)
@@ -152,8 +179,8 @@ func SliceStringUnique(slice []string) []string {
 }
 
 // 去重+合并
-func SliceStringMerge(a, b []string) []string {
-	return SliceStringUnion(a, b)
+func SliceStringMerge(a []string, b ...[]string) []string {
+	return SliceStringUnion(a, b...)
 }
 
 // 交集
@@ -168,7 +195,9 @@ func SliceStringIntersect(a, b []string) []string {
 }
 
 // 并集
-func SliceStringUnion(a, b []string) []string {
-	a = append(a, b...)
+func SliceStringUnion(a []string, b ...[]string) []string {
+	for _, v := range b {
+		a = append(a, v...)
+	}
 	return SliceStringUnique(a)
 }
