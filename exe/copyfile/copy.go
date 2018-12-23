@@ -15,10 +15,14 @@ import (
 	"github.com/relunctance/goutils/fc"
 )
 
+const (
+	DEFAULT_CHAN_NUM = 20
+	MAX_CHAN_NUM     = 100
+)
+
 var input string
 var output string
 var cover bool
-var checksize bool
 var maxnum int
 var version string
 
@@ -27,20 +31,18 @@ func main() {
 	flag.StringVar(&input, "version", "1.0.0.1001", "copy version")
 	flag.StringVar(&input, "input", "", "the copy input dir , the type should be dir")
 	flag.StringVar(&output, "output", "", "the copy input dir, the type should be dir")
-	flag.BoolVar(&cover, "cover", false, "is cover exists file")
-	flag.BoolVar(&checksize, "check", true, "is check size when use -cover=true")
-	flag.IntVar(&maxnum, "maxnum", 50, "the num size  of channel , max limit is 100")
+	flag.BoolVar(&cover, "cover", false, "is cover same file ,if false and filesize is equal then will not cover same file (default false)")
+	flag.IntVar(&maxnum, "maxnum", DEFAULT_CHAN_NUM, "the num size  of channel , max limit is 100")
 	flag.Parse()
 	fmt.Println("---------------------------------\n")
 	fmt.Println("input:", input)
 	fmt.Println("output:", output)
 	fmt.Println("cover:", cover)
-	fmt.Println("check:", checksize)
 	fmt.Println("maxnum:", maxnum)
 	fmt.Println("\n---------------------------------\n")
 
-	if maxnum > 100 {
-		maxnum = 100
+	if maxnum > MAX_CHAN_NUM {
+		maxnum = MAX_CHAN_NUM
 	}
 	input = strings.TrimRight(input, "/")
 	output = strings.TrimRight(output, "/")
@@ -136,7 +138,7 @@ func copyFile(filename string, input, output string, ch chan string) (int64, err
 
 	if fc.IsExist(dst) {
 		dstsize := fc.FileSize(dst)
-		if !cover && fc.FileSize(src) == dstsize {
+		if !cover && fc.FileSize(src) == dstsize { // if cover== false and filesize is ok , then will not cover the same file
 			log.Printf("the same filesize [%d] , ignore [%s] \n", dstsize, dst)
 			ch <- filename
 			return 0, nil
