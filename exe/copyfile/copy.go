@@ -1,7 +1,6 @@
 package copyfile
 
 import (
-	"flag"
 	"fmt"
 	"io"
 	"io/ioutil"
@@ -20,35 +19,13 @@ const (
 	MAX_CHAN_NUM     = 100
 )
 
-var input string
-var output string
 var cover bool
-var maxnum int
-var version string
 
-func main() {
+func Copy(input, output string, maxnum int, cv bool) {
+	cover = cv
 	startTime := time.Now()
-	flag.StringVar(&input, "version", "1.0.0.1001", "copy version")
-	flag.StringVar(&input, "input", "", "the copy input dir , the type should be dir")
-	flag.StringVar(&output, "output", "", "the copy input dir, the type should be dir")
-	flag.BoolVar(&cover, "cover", false, "is cover same file ,if false and filesize is equal then will not cover same file (default false)")
-	flag.IntVar(&maxnum, "maxnum", DEFAULT_CHAN_NUM, "the num size  of channel , max limit is 100")
-	flag.Parse()
-	fmt.Println("---------------------------------\n")
-	fmt.Println("input:", input)
-	fmt.Println("output:", output)
-	fmt.Println("cover:", cover)
-	fmt.Println("maxnum:", maxnum)
-	fmt.Println("\n---------------------------------\n")
-
 	if maxnum > MAX_CHAN_NUM {
 		maxnum = MAX_CHAN_NUM
-	}
-	input = strings.TrimRight(input, "/")
-	output = strings.TrimRight(output, "/")
-	if input == "" || output == "" {
-		flag.Usage()
-		return
 	}
 	if err := checkPath(input); err != nil {
 		panic(err)
@@ -57,23 +34,19 @@ func main() {
 	if err := checkPath(output); err != nil {
 		panic(err)
 	}
-
 	names := fileNames(input)
 	sliceNames := fc.SliceChunk(names, maxnum) //每次最多并发maxnum个
 	for _, vs := range sliceNames {
-		copyByNames(vs)
+		copyByNames(input, output, vs)
 		//time.Sleep(1 * time.Second) //等待1秒
 	}
 	log.Printf("all cost time: [%s]\n", time.Now().Sub(startTime).String())
+
 }
 
-func copyByNames(names []string) {
-	l := len(names)
-	if l == 0 {
-		log.Printf("input dir: [%s] is a empty dir\n", input)
-		return
-	}
+func copyByNames(input, output string, names []string) {
 
+	l := len(names)
 	startTime := time.Now()
 	ch := make(chan string, l)
 	defer close(ch)
