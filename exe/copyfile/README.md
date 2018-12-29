@@ -4,7 +4,7 @@
 
 ```
 go get github.com/relunctance/goutils
-go build $GOPATH/src/github.com/relunctance/goutils/exe/copyfile/copy.go
+go build -o copy $GOPATH/src/github.com/relunctance/goutils/exe/copyfile/cmd/main.go
 ```
 
 ## 查看帮助：
