@@ -10,6 +10,35 @@ import (
 	"strings"
 )
 
+// 字符串两个切割符号支持
+// 使用示例: SplitByChar(str , "&&" , "||");
+func SplitByChar(smart, spChar1, spChar2 string) (data []string) {
+	arr := strings.Split(smart, spChar1)
+	for i, val := range arr {
+		val = strings.TrimSpace(val)
+		temparr := strings.Split(val, spChar2)
+		if len(temparr) == 1 {
+			data = append(data, val)
+			if i < len(arr)-1 {
+				data = append(data, spChar1)
+			}
+			continue
+		}
+		for j, v := range temparr {
+			v = strings.TrimSpace(v)
+			data = append(data, v)
+			if j < len(temparr)-1 {
+				data = append(data, spChar2)
+			}
+		}
+		if i < len(arr)-1 {
+			data = append(data, spChar1)
+		}
+	}
+	return
+
+}
+
 // unicode转码为中文
 func UnicodeToString(s string) string {
 	var pos int
