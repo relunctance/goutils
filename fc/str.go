@@ -10,6 +10,47 @@ import (
 	"strings"
 )
 
+// unicode转码为中文
+func UnicodeToString(s string) string {
+	var pos int
+	pos = strings.Index(s, "\\u")
+	if pos == -1 {
+		return s
+	}
+
+	var ret string
+	ret += s[0:pos]
+	if pos+6 > len(s) {
+		return s
+	}
+	ret += unicodeChar(s[pos+2 : pos+6])
+	ret += s[pos+6:]
+	return UnicodeToString(ret)
+}
+
+func unicodeChar(s string) string {
+	temp, err := strconv.ParseUint(s, 16, 32)
+	if err != nil {
+		panic(err)
+	}
+	return fmt.Sprintf("%c", temp)
+}
+
+// 字符串转码为unicode
+func StringToUnicode2(s string) string {
+	rs := []rune(s)
+	json := ""
+	for _, r := range rs {
+		rint := int(r)
+		if rint < 128 {
+			json += string(r)
+		} else {
+			json += "\\u" + strconv.FormatInt(int64(rint), 16) // json
+		}
+	}
+	return json
+}
+
 func Chr(c rune) string {
 	return string(c)
 }
