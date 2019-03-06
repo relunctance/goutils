@@ -168,3 +168,40 @@ func ByteFormat(i float64) string {
 	}
 	return fmt.Sprintf("%.3f %s", j, a[pos])
 }
+
+// 解析domain
+func ParseHostFromUrl(address string) string {
+	u, err := url.Parse(address)
+	if err != nil {
+		panic(err)
+	}
+	return u.Hostname()
+}
+
+// 统计字符串出现的次数
+func SubstrCount(s, v string) int {
+	arr := strings.Split(s, v)
+	return len(arr) - 1
+
+}
+
+func IsIp(s string) bool {
+	arr := strings.Split(s, ".")
+	if len(arr) != 4 {
+		return false
+	}
+
+	for i := 0; i < 4; i++ {
+		v, err := strconv.Atoi(arr[i])
+		if err != nil {
+			return false
+		}
+		if v >= 0 && v <= 255 {
+			continue
+		} else {
+			return false
+		}
+	}
+	return true
+
+}
