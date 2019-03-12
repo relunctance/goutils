@@ -169,15 +169,6 @@ func ByteFormat(i float64) string {
 	return fmt.Sprintf("%.3f %s", j, a[pos])
 }
 
-// 解析domain
-func ParseHostFromUrl(address string) string {
-	u, err := url.Parse(address)
-	if err != nil {
-		panic(err)
-	}
-	return u.Hostname()
-}
-
 // 统计字符串出现的次数
 func SubstrCount(s, v string) int {
 	arr := strings.Split(s, v)
@@ -204,4 +195,363 @@ func IsIp(s string) bool {
 	}
 	return true
 
+}
+
+// 判断是否是域名
+// 是返回true
+// 不是返回false
+func IsDomain(s string) bool {
+	pos := strings.LastIndex(s, ".")
+	if pos == -1 {
+		return false
+	}
+	if pos == len(s)-1 {
+		return false
+	}
+	v := s[pos+1:]
+	switch v {
+	case
+		"ac",
+		"ad",
+		"ae",
+		"af",
+		"ag",
+		"ai",
+		"al",
+		"am",
+		"an",
+		"ao",
+		"aq",
+		"ar",
+		"arpa",
+		"art",
+		"as",
+		"at",
+		"aw",
+		"ax",
+		"az",
+		"ba",
+		"bb",
+		"bd",
+		"be",
+		"beer",
+		"bf",
+		"bg",
+		"bh",
+		"bi",
+		"biz",
+		"bj",
+		"bl",
+		"bm",
+		"bn",
+		"bo",
+		"bq",
+		"br",
+		"bs",
+		"bt",
+		"bv",
+		"bw",
+		"by",
+		"bz",
+		"ca",
+		"cc",
+		"cd",
+		"cf",
+		"cg",
+		"ch",
+		"ci",
+		"ck",
+		"cl",
+		"club",
+		"cm",
+		"cn",
+		"co",
+		"com",
+		"cr",
+		"cu",
+		"cv",
+		"cw",
+		"cx",
+		"cy",
+		"cz",
+		"de",
+		"design",
+		"dj",
+		"dk",
+		"dm",
+		"do",
+		"dz",
+		"ec",
+		"edu",
+		"ee",
+		"eg",
+		"eh",
+		"er",
+		"es",
+		"et",
+		"eu",
+		"fi",
+		"fj",
+		"fk",
+		"fm",
+		"fo",
+		"fr",
+		"fun",
+		"ga",
+		"gb",
+		"gd",
+		"ge",
+		"gf",
+		"gg",
+		"gh",
+		"gi",
+		"gm",
+		"gn",
+		"gov",
+		"gp",
+		"gq",
+		"gr",
+		"group",
+		"gs",
+		"gt",
+		"gu",
+		"gw",
+		"gy",
+		"hk",
+		"hm",
+		"hn",
+		"hr",
+		"ht",
+		"hu",
+		"id",
+		"ie",
+		"il",
+		"im",
+		"in",
+		"info",
+		"ink",
+		"int",
+		"io",
+		"iq",
+		"ir",
+		"is",
+		"it",
+		"je",
+		"jm",
+		"jo",
+		"jp",
+		"ke",
+		"kg",
+		"kh",
+		"ki",
+		"kim",
+		"km",
+		"kn",
+		"kp",
+		"kr",
+		"kw",
+		"ky",
+		"kz",
+		"la",
+		"lb",
+		"lc",
+		"li",
+		"link",
+		"live",
+		"lk",
+		"lr",
+		"ls",
+		"lt",
+		"ltd",
+		"lu",
+		"luxe",
+		"lv",
+		"ly",
+		"ma",
+		"mc",
+		"md",
+		"me",
+		"mf",
+		"mg",
+		"mh",
+		"mil",
+		"mk",
+		"ml",
+		"mm",
+		"mn",
+		"mo",
+		"mobi",
+		"mp",
+		"mq",
+		"mr",
+		"ms",
+		"mt",
+		"mu",
+		"mv",
+		"mw",
+		"mx",
+		"my",
+		"mz",
+		"na",
+		"name",
+		"nc",
+		"ne",
+		"net",
+		"nf",
+		"ng",
+		"ni",
+		"nl",
+		"no",
+		"np",
+		"nr",
+		"nu",
+		"nz",
+		"om",
+		"online",
+		"org",
+		"pa",
+		"pe",
+		"pf",
+		"pg",
+		"ph",
+		"pk",
+		"pl",
+		"pm",
+		"pn",
+		"pr",
+		"pro",
+		"ps",
+		"pt",
+		"pub",
+		"pw",
+		"py",
+		"qa",
+		"re",
+		"red",
+		"ren",
+		"ro",
+		"rs",
+		"ru",
+		"rw",
+		"sa",
+		"sb",
+		"sc",
+		"sd",
+		"se",
+		"sg",
+		"sh",
+		"shop",
+		"si",
+		"site",
+		"sj",
+		"sk",
+		"sl",
+		"sm",
+		"sn",
+		"so",
+		"sr",
+		"ss",
+		"st",
+		"store",
+		"su",
+		"sv",
+		"sx",
+		"sy",
+		"sz",
+		"tc",
+		"td",
+		"tech",
+		"tf",
+		"tg",
+		"th",
+		"tj",
+		"tk",
+		"tl",
+		"tm",
+		"tn",
+		"to",
+		"top",
+		"tp",
+		"tr",
+		"tt",
+		"tv",
+		"tw",
+		"tz",
+		"ua",
+		"ug",
+		"uk",
+		"um",
+		"us",
+		"uy",
+		"uz",
+		"va",
+		"vc",
+		"ve",
+		"vg",
+		"vi",
+		"vip",
+		"vn",
+		"vu",
+		"wang",
+		"wf",
+		"wiki",
+		"work",
+		"ws",
+		"xin",
+		"xyz",
+		"ye",
+		"yt",
+		"za",
+		"zm",
+		"zw",
+		"餐厅",
+		"公司",
+		"集团",
+		"商标",
+		"网店",
+		"网络",
+		"网址",
+		"我爱你",
+		"在线",
+		"中国",
+		"中文网":
+		return true
+	}
+	return false
+
+}
+
+// 检测MD5
+func CheckMd5(v string) bool {
+	return CheckHexAndLength(v, 32)
+}
+
+func CheckHexValid(vs string) bool {
+	for _, v := range vs {
+		if v >= '0' && v <= 'f' {
+			continue
+		}
+		return false
+	}
+	return true
+}
+
+//
+func CheckHexAndLength(v string, l int) bool {
+	if len(v) != l {
+		return false
+	}
+	if !CheckHexValid(v) {
+		return false
+	}
+	return true
+}
+
+// 解析domain
+func ParseHostFromUrl(address string) (string, error) {
+	u, err := url.Parse(address)
+	if err != nil { // 日志中有可能存在
+		return "", err
+	}
+	return u.Hostname(), nil
 }
