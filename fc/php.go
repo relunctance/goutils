@@ -16,7 +16,7 @@ func Bin2hex(raw string) string {
 }
 
 func HexDump(raw string) string {
-	v := Hex2bin(s)
+	v := Hex2bin(raw)
 	return hex.Dump([]byte(v))
 }
 
