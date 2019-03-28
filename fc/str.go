@@ -10,6 +10,40 @@ import (
 	"strings"
 )
 
+/*
+	"'ipinfo'.*.info.'city'":                      4,
+	"'ipinfo'.*.info.city":                        4,
+	"ipinfo.*.info.city":                          4,
+	"ipinfo.'*'.info.city":                        4,
+	"'1234.23.4.2'.ipinfo.'1.0.0.1001'.info.city": 5,
+	"'ipinfo'.'1.0.0.1001'.info.name.val.'city'":  6,
+	"ipinfo.'1.0.0.1001'.info.city.'a.b.c'":       5,
+
+*/
+func SplitComma(path string) []string {
+	path = strings.TrimSpace(path)
+	ret := make([]string, 0, 3)
+	if strings.Index(path, "'") != -1 {
+		arr := strings.Split(path, "'")
+		for _, v := range arr {
+			if v == "" {
+				continue
+			}
+			if v == "." {
+				continue
+			}
+			if v[0] == '.' || v[len(v)-1] == '.' {
+				ret = append(ret, strings.Split(strings.Trim(v, "."), ".")...)
+			} else {
+				ret = append(ret, v)
+			}
+		}
+	} else {
+		ret = strings.Split(path, ".")
+	}
+	return ret
+}
+
 // 字符串两个切割符号支持
 // 使用示例: SplitByChar(str , "&&" , "||");
 func SplitByChar(smart, spChar1, spChar2 string) (data []string) {

@@ -7,6 +7,25 @@ import (
 	"github.com/smartystreets/goconvey/convey"
 )
 
+func TestFsSplit(t *testing.T) {
+	dataMap := map[string]int{
+		"'ipinfo'.*.info.'city'":                      4,
+		"'ipinfo'.*.info.city":                        4,
+		"ipinfo.*.info.city":                          4,
+		"ipinfo.'*'.info.city":                        4,
+		"'1234.23.4.2'.ipinfo.'1.0.0.1001'.info.city": 5,
+		"'ipinfo'.'1.0.0.1001'.info.name.val.'city'":  6,
+		"ipinfo.'1.0.0.1001'.info.city.'a.b.c'":       5,
+	}
+
+	for key, val := range dataMap {
+		ret := SplitComma(key)
+		if len(ret) != val {
+			t.Fatalf("[%d] should be == [%d]'", len(ret), val)
+		}
+	}
+}
+
 func TestParseStr(t *testing.T) {
 	convey.Convey("测试解析URL", t, func() {
 		u := ParseStr("?username=zhangsan&passwd=123456")
