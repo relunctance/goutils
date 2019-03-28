@@ -1,9 +1,24 @@
 package fc
 
 import (
+	"encoding/hex"
 	"fmt"
 	"os"
 )
+
+func Hex2bin(raw string) string {
+	result, _ := hex.DecodeString(raw)
+	return string(result)
+}
+
+func Bin2hex(raw string) string {
+	return hex.EncodeToString([]byte(raw))
+}
+
+func HexDump(raw string) string {
+	v := Hex2bin(s)
+	return hex.Dump([]byte(v))
+}
 
 /*
 Returns a string with backslashes added before characters that need to be escaped. These characters are:
