@@ -1,7 +1,11 @@
 package dump
 
-import "fmt"
-import "strings"
+import (
+	"bytes"
+	"encoding/json"
+	"fmt"
+	"strings"
+)
 
 const (
 	COLOR_DEFAULT = "__color__"
@@ -33,6 +37,21 @@ func Println(v ...interface{}) {
 	if Debug {
 		print(strings.Replace(ColorFormat, COLOR_DEFAULT, fmt.Sprintln(v...), 1))
 	}
+}
+
+func PrintJsonString(s string) {
+	PrintJsonByte([]byte(s))
+}
+
+func PrintJsonByte(b []byte) {
+	var out bytes.Buffer
+	err := json.Indent(&out, b, "", "\t")
+
+	if err != nil {
+		panic(err)
+	}
+
+	fmt.Println(out.String())
 }
 
 func buildColorFormat(format string) string {
