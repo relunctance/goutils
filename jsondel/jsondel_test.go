@@ -5,8 +5,8 @@ import (
 	"io/ioutil"
 	"testing"
 
-	"git.corp.qihoo.net/cloudsafeeng/gohub/qutil"
 	sj "github.com/guyannanfei25/go-simplejson"
+	"github.com/relunctance/goutils/fc"
 )
 
 func TestFsSplit(t *testing.T) {
@@ -37,7 +37,7 @@ func TestMapDelete(t *testing.T) {
 	})
 	v.run()
 
-	fmt.Println(qutil.JsonDecode(v.json()))
+	fmt.Println(fc.JsonDecode(v.json()))
 
 }
 
@@ -47,8 +47,8 @@ func TestSliceDelete(t *testing.T) {
 		"ipinfo.val.#.city",
 	})
 	v.run()
-	fmt.Println(qutil.JsonDecode(v.json()))
-	if qutil.Md5(qutil.JsonDecode(v.json())) != "82d5fb62bb2a121542d7da897af6a459" {
+	fmt.Println(fc.JsonDecode(v.json()))
+	if fc.Md5(fc.JsonDecode(v.json())) != "82d5fb62bb2a121542d7da897af6a459" {
 		t.Fatalf("should be = '82d5fb62bb2a121542d7da897af6a459'")
 	}
 
@@ -63,9 +63,9 @@ func TestUnsetMultiIpField(t *testing.T) {
 	v := newVjson(j, fields)
 	v.run()
 
-	fmt.Println(qutil.JsonDecode(v.json()))
+	fmt.Println(fc.JsonDecode(v.json()))
 
-	if qutil.Md5(qutil.JsonDecode(v.json())) != "cc1ec297265719c4924cbb58dc64411a" {
+	if fc.Md5(fc.JsonDecode(v.json())) != "cc1ec297265719c4924cbb58dc64411a" {
 		t.Fatalf("should be = 'cc1ec297265719c4924cbb58dc64411a'")
 	}
 }
@@ -78,9 +78,9 @@ func TestUnsetIpInfoMap(t *testing.T) {
 	}
 	v := newVjson(j, fields)
 	v.run()
-	fmt.Println(qutil.JsonDecode(v.json()))
+	fmt.Println(fc.JsonDecode(v.json()))
 
-	if qutil.Md5(qutil.JsonDecode(v.json())) != "edf40ffd6817cae71ec67e0f51cd25cf" {
+	if fc.Md5(fc.JsonDecode(v.json())) != "edf40ffd6817cae71ec67e0f51cd25cf" {
 		t.Fatalf("should be = 'edf40ffd6817cae71ec67e0f51cd25cf'")
 	}
 }
@@ -102,7 +102,7 @@ func newJsonByFile(filename string) *sj.Json {
 
 func getDataByName(filename string) []byte {
 	path := fmt.Sprintf("./data/%s", filename)
-	if !qutil.IsExist(path) {
+	if !fc.IsExist(path) {
 		panic(fmt.Errorf("not exists: %s", path))
 	}
 	data, err := ioutil.ReadFile(path)
