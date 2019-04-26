@@ -11,10 +11,9 @@ import (
 )
 
 // 返回微秒 , unix
-func Microtime() (millisecond float64, unix int) {
+func Microtime() (float64, int64) {
 	t := time.Now()
-	millisecond, unix = float64(t.Nanosecond())/1000/1000/1000, t.Unix()
-	return
+	return float64(t.Nanosecond()) / 1000 / 1000 / 1000, t.Unix()
 }
 
 func FormatDateString(unix string) (string, error) {
