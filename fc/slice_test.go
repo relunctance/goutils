@@ -27,7 +27,7 @@ func TestInIntsArray(t *testing.T) {
 		convey.Convey("传入的数组必须是排序后的数组", func() {
 			num := 129
 			arr := []int{3, 11, 16, 18, 19, 20, 55, 58, 104, 142, 142, 142, 142, 143, 10006, 10015, 10027, 10046, 10053, 10057, 10058, 10059, 10060, 10062, 10063, 10064, 10069, 10221, 129}
-			convey.So(func() { InArrayInts(num, arr) }, convey.ShouldPanic)
+			convey.So(InArrayInts(num, arr), convey.ShouldBeTrue)
 		})
 		convey.Convey("存在于数组中", func() {
 			arr := []int{6, 7, 8, 9}

@@ -1,4 +1,4 @@
-package ftime
+package fc
 
 import (
 	"fmt"
