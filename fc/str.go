@@ -217,6 +217,9 @@ func IsIp(s string) bool {
 	}
 
 	for i := 0; i < 4; i++ {
+		if len(arr[i]) > 3 {
+			return false
+		}
 		v, err := strconv.Atoi(arr[i])
 		if err != nil {
 			return false

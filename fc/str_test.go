@@ -7,6 +7,17 @@ import (
 	"github.com/smartystreets/goconvey/convey"
 )
 
+func TestIsIp(t *testing.T) {
+	ips := map[string]bool{
+		`"v=spf1 include:spf.mail.*.*`: false,
+	}
+	for ip, v := range ips {
+		ret := IsIp(ip)
+		if ret != v {
+			t.Fatalf("should be %v", v)
+		}
+	}
+}
 func TestFsSplit(t *testing.T) {
 	dataMap := map[string]int{
 		"'ipinfo'.*.info.'city'":                      4,
