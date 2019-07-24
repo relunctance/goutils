@@ -1,6 +1,8 @@
 package fc
 
 import (
+	"bytes"
+	"io/ioutil"
 	"os"
 	"syscall"
 )
@@ -14,22 +16,22 @@ func IsExist(filename string) bool {
 }
 
 // check file or dir is writeable
-func IsWriteable(name string) bool {                                                                                  
-    err := syscall.Access(name, syscall.O_RDWR)                                                                       
-    if err == nil {                                                                                                   
-        return true                                                                                                   
-    }                                                                                                                 
-    return false                                                                                                      
-}  
+func IsWriteable(name string) bool {
+	err := syscall.Access(name, syscall.O_RDWR)
+	if err == nil {
+		return true
+	}
+	return false
+}
 
 // check file or dir is readable
-func IsReadable(name string) bool {                                                                                   
-    err := syscall.Access(name, syscall.O_RDONLY)                                                                     
-    if err == nil {
-        return true
-    }
-    return false
-}  
+func IsReadable(name string) bool {
+	err := syscall.Access(name, syscall.O_RDONLY)
+	if err == nil {
+		return true
+	}
+	return false
+}
 
 // get file size by filepath
 func FileSize(filename string) int64 {
@@ -38,4 +40,24 @@ func FileSize(filename string) int64 {
 	}
 
 	return 0
+}
+
+func FileGet(filename string) ([][]byte, error) {
+	content, err := ioutil.ReadFile(filename)
+	if err != nil {
+		return nil, err
+	}
+	return bytes.Split(content, []byte("\n")), nil
+}
+
+func FileStrings(filename string) ([]string, error) {
+	lines, err := FileGet(filename)
+	if err != nil {
+		return nil, err
+	}
+	data := make([]string, 0, len(lines))
+	for _, line := range lines {
+		data = append(data, string(line))
+	}
+	return data, nil
 }
