@@ -4,7 +4,39 @@ import (
 	"fmt"
 	"reflect"
 	"sort"
+	"strings"
 )
+
+// 返回s1中每个元素 可以在s2中的检索到的值
+// eg : s1 = ["a" , "b" , "c"] ; s2 = ["a+t" , "b+t"]  => ["a","b"]
+func IntersectKeys(s1, s2 []string) (s []string) {
+	for _, k1 := range s1 {
+		for _, k2 := range s2 {
+			if strings.Index(k2, k1) != -1 {
+				s = append(s, k1)
+			}
+		}
+	}
+	return s
+}
+
+// 返回s1中每个元素 无法在s2中的检索到的值
+// eg : s1 = ["a" , "b" , "c"] ; s2 = ["a+t" , "b+t"]  => ["c"]
+func UniqueKeys(s1, s2 []string) (s []string) {
+	for _, k1 := range s1 {
+		var has bool = false
+		for _, k2 := range s2 {
+			if strings.Index(k2, k1) != -1 {
+				has = true
+				break
+			}
+		}
+		if !has {
+			s = append(s, k1)
+		}
+	}
+	return s
+}
 
 // diff slice
 // Compares arr1 against one or more other arrays and returns the values in arr1 that are not present in any of the other arrays.
