@@ -1,10 +1,8 @@
-package debug
+package fc
 
 import (
 	"strings"
 	"testing"
-
-	"github.com/relunctance/goutils/slice"
 )
 
 func TestDebugTrace(t *testing.T) {
@@ -17,8 +15,8 @@ func TestDebugTrace(t *testing.T) {
 		"asm_amd64.s:runtime.goexit()",
 	}
 
-	if !slice.CheckStringSliceEqual(newts, result) {
-		t.Errorf("expcect true newts:\n %v\n === \nresult:\n%v\n")
+	if !CheckStringSliceEqual(newts, result) {
+		t.Errorf("expcect true newts:\n %v\n === \nresult:\n%v\n", newts, result)
 	}
 }
 

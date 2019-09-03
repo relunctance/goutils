@@ -37,10 +37,10 @@ func (m *MapKey) MapCount(v string) {
 	m.MapCountByName(v, mapkey_default_name)
 }
 
-func (m *MapKey) MapCountByName(v, name string) {
+func (m *MapKey) MapCountByName(v, name string) error {
 	uniqMap, ok := m.uniq[name]
 	if !ok {
-		panic(fmt.Errorf("not exists name:[%s]", name))
+		return fmt.Errorf("not exists name:[%s]", name)
 	}
 	dupMap := m.duplicate[name]
 	if _, ok := uniqMap[v]; !ok {
@@ -49,6 +49,7 @@ func (m *MapKey) MapCountByName(v, name string) {
 	} else {
 		dupMap[v] = struct{}{}
 	}
+	return nil
 }
 
 // 获取slice的结果

@@ -4,3 +4,4 @@
 #go test -run "TestSliceDiff" -v
 #go test -run "TestInIntsArray" -v
 go test -run "TestIntersectKeys" -v
+#go test -run "TestMinInt" -v
