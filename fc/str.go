@@ -10,6 +10,16 @@ import (
 	"strings"
 )
 
+// URLEncode urlencode()
+func URLEncode(str string) string {
+	return url.QueryEscape(str)
+}
+
+// URLDecode urldecode()
+func URLDecode(str string) (string, error) {
+	return url.QueryUnescape(str)
+}
+
 /*
 	"'ipinfo'.*.info.'city'":                      4,
 	"'ipinfo'.*.info.city":                        4,

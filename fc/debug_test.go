@@ -9,12 +9,15 @@ func TestDebugTrace(t *testing.T) {
 	ts := DebugTrace()
 	newts := getTraceInfo(ts)
 	result := []string{
-		"debug.go:debug.DebugTrace()",
-		"debug_test.go:debug.TestDebugTrace()",
-		"testing.go:testing.tRunner()",
-		"asm_amd64.s:runtime.goexit()",
+		"DebugTrace()",
+		"TestDebugTrace()",
+		"tRunner()",
+		"goexit()",
 	}
-
+	for i, v := range newts {
+		pos := strings.LastIndex(v, ".")
+		newts[i] = v[pos+1:]
+	}
 	if !CheckStringSliceEqual(newts, result) {
 		t.Errorf("expcect true newts:\n %v\n === \nresult:\n%v\n", newts, result)
 	}
