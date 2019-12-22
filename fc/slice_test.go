@@ -7,6 +7,19 @@ import (
 	"github.com/smartystreets/goconvey/convey"
 )
 
+func TestIntersectKeys(t *testing.T) {
+	s1 := []string{"a", "b", "c"}
+	s2 := []string{"a+t", "b+t"}
+	v := IntersectKeys(s1, s2)
+	if !CheckStringSliceEqual(v, []string{"a", "b"}) {
+		t.Fatalf("should be == %#v\n", []string{"a", "b"})
+	}
+	vq := UniqueKeys(s1, s2)
+	if !CheckStringSliceEqual(vq, []string{"c"}) {
+		t.Fatalf("should be == %#v\n", []string{"c"})
+	}
+}
+
 func TestSliceDiff(t *testing.T) {
 
 	arr1 := []string{"a", "f", "b", "c", "g", "e", "i"}
