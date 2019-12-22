@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"crypto/md5"
 	"fmt"
+	"hash/crc32"
 	"math"
 	"net/url"
 	"strconv"
@@ -591,4 +592,8 @@ func ParseHostFromUrl(address string) (string, error) {
 		return "", err
 	}
 	return u.Hostname(), nil
+}
+
+func Hash(v []byte) uint32 {
+	return crc32.Checksum(v, crc32.MakeTable(crc32.IEEE))
 }
