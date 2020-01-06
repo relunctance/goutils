@@ -4,6 +4,7 @@ import (
 	"encoding/hex"
 	"fmt"
 	"os"
+	"time"
 )
 
 func Hex2bin(raw string) string {
@@ -59,9 +60,6 @@ func Stripslashes(str string) string {
 // prefix用于解决结果碰撞问题
 // length =  26
 func Uniqid(prefix string) string {
-	f := Random()
-	h, _ := os.Hostname()
-	h = Md5(fmt.Sprintf("%s-%d-%f", h, os.Getpid(), f))
-	fs := fmt.Sprintf("%f", f)
-	return prefix + h[0:20] + fs[2:]
+	now := time.Now()
+	return fmt.Sprintf("%s%d%08x%05x", prefix, os.Getpid(), now.Unix(), now.UnixNano()%0x100000)
 }
