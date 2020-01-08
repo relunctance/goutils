@@ -6,10 +6,6 @@
 go get -u -v github.com/relunctance/goutils
 ```
 
-
-### Notice 
-- jsondel has been remove to [https://github.com/relunctance/djson](https://github.com/relunctance/djson)
-
 ### Useage 
 ```go
 package main
