@@ -70,21 +70,31 @@ func Strtotime(format string, t time.Time) (T time.Time, err error) {
 //" 2018-03-01 "
 //"2018-03-01 14:57:51"
 func Fstrtotime(dateStr string) (T time.Time, err error) {
-	dateStr = strings.TrimSpace(dateStr)
-	fieldarr := strings.Fields(dateStr)
-	if len(fieldarr) > 2 {
-		err = fmt.Errorf("format dateStr is error")
-		return
-	}
-	if len(fieldarr) == 1 {
-		return fmtdate.ParseDate(dateStr)
-	}
+    dateStr = strings.TrimSpace(dateStr)
+    fieldarr := strings.Fields(dateStr)
+    if len(fieldarr) > 2 {
+        err = fmt.Errorf("format dateStr is error")
+        return
+    }
+    if len(fieldarr) == 1 {
+        return fmtdate.ParseDate(dateStr)
+    }
 
-	if len(fieldarr) == 2 {
-		return fmtdate.ParseDateTime(dateStr)
-	}
-	return
+    if len(fieldarr) == 2 {
+        return parseTimeWithLocation(dateStr)
+    }
+    return
 }
+
+// 修复时区问题
+func parseTimeWithLocation(s string) (time.Time, error) {
+    loc, err := time.LoadLocation("Asia/Shanghai")
+    if err != nil {
+        return time.Time{}, err
+    }
+    return time.ParseInLocation("2006-01-02 15:04:05", s, loc)
+}
+
 
 //包含end 天
 func BuildTimeInterval(start, end time.Time) []string {
