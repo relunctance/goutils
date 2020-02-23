@@ -574,6 +574,15 @@ func CheckMd5(v string) bool {
 	return CheckHexAndLength(v, 32)
 }
 
+// 检测sha1
+func CheckSha1(v string) bool {
+	return CheckHexAndLength(v, 40)
+}
+
+// 检测sha256
+func CheckSha256(v string) bool {
+	return CheckHexAndLength(v, 64)
+}
 func CheckHexValid(vs string) bool {
 	for _, v := range vs {
 		if v >= '0' && v <= 'f' {
