@@ -1,0 +1,33 @@
+package fc
+
+import (
+    "fmt"
+    "os"
+    "os/user"
+    "runtime"
+)
+
+
+
+func HomeDir() (home string) {
+    u, err := user.Current()
+    if u != nil && err == nil {
+        home = u.HomeDir
+    }
+
+    if home == "" {
+        home = os.Getenv("HOME")
+    }
+
+    if home == "" {
+        if runtime.GOOS == "plan9" {
+            home = os.Getenv("home")
+        } else if runtime.GOOS == "windows" {
+            home = os.Getenv("HOMEDRIVE") + os.Getenv("HOMEPATH")
+            if home == "" {
+                home = os.Getenv("USERPROFILE")
+            }
+        }
+    }
+    return
+}   
