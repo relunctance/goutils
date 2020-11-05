@@ -8,4 +8,5 @@ require (
 	github.com/metakeule/fmtdate v1.1.2
 	github.com/shirou/gopsutil v2.20.1+incompatible
 	github.com/smartystreets/goconvey v1.6.4
+	github.com/spf13/viper v1.7.1
 )
