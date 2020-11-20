@@ -1,8 +1,15 @@
 package fc
 
 import (
+	"github.com/Jeffail/gabs/v2"
 	sj "github.com/guyannanfei25/go-simplejson"
 )
+
+// 传入结构体, 可以打印出来格式化后的JSON
+// 一般用于调试
+func JsonIndent(v interface{}) string {
+	return gabs.Wrap(v).StringIndent("", "   ")
+}
 
 //多个数组json处理
 func JsonDecodes(js []*sj.Json) []string {
