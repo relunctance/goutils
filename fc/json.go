@@ -7,7 +7,7 @@ import (
 
 // 传入结构体, 可以打印出来格式化后的JSON
 // 一般用于调试
-func JsonIndent(v interface{}) string {
+func JsonDump(v interface{}) string {
 	return gabs.Wrap(v).StringIndent("", "   ")
 }
 
