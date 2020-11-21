@@ -7,6 +7,13 @@ import (
 	"github.com/smartystreets/goconvey/convey"
 )
 
+func TestSliceIntUnique(t *testing.T) {
+	v := SliceIntUnique([]int{1, 1, 2, 3, 2, 3})
+	if len(v) != 3 {
+		t.Fatalf("should be == 3")
+	}
+}
+
 func TestIntersectKeys(t *testing.T) {
 	s1 := []string{"a", "b", "c"}
 	s2 := []string{"a+t", "b+t"}

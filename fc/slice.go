@@ -212,6 +212,22 @@ func EndIntSlice(arr []int) (res int) {
 	return
 }
 
+func SliceIntUnique(slice []int) []int {
+	sort.Ints(slice)
+	i := 0
+	var j int
+	for {
+		if i >= len(slice)-1 {
+			break
+		}
+		for j = i + 1; j < len(slice) && slice[i] == slice[j]; j++ {
+		}
+		slice = append(slice[:i+1], slice[j:]...)
+		i++
+	}
+	return slice
+}
+
 //去重
 func SliceStringUnique(slice []string) []string {
 	sort.Strings(slice)
