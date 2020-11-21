@@ -7,6 +7,21 @@ import (
 	"strings"
 )
 
+func IsArray(value interface{}) bool {
+	rv := reflect.ValueOf(value)
+	kind := rv.Kind()
+	if kind == reflect.Ptr {
+		rv = rv.Elem()
+		kind = rv.Kind()
+	}
+	switch kind {
+	case reflect.Array, reflect.Slice:
+		return true
+	default:
+		return false
+	}
+}
+
 // 返回s1中每个元素 可以在s2中的检索到的值
 // eg : s1 = ["a" , "b" , "c"] ; s2 = ["a+t" , "b+t"]  => ["a","b"]
 func IntersectKeys(s1, s2 []string) (s []string) {
