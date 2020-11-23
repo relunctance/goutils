@@ -12,8 +12,7 @@ func JsonDump(v interface{}) string {
 }
 
 //多个数组json处理
-func JsonDecodes(js []*sj.Json) []string {
-	arr := make([]string, 0, len(js))
+func JsonDecodes(js []*sj.Json) (arr []string) {
 	for _, j := range js {
 		v := JsonDecode(j)
 		if v != "" {
@@ -24,15 +23,11 @@ func JsonDecodes(js []*sj.Json) []string {
 }
 
 //用于查看对应json结果的字符串表示
-func JsonDecode(j *sj.Json) string {
+func JsonDecode(j interface{}) string {
 	if j == nil {
 		return ""
 	}
-	bytes, err := j.MarshalJSON()
-	if err != nil {
-		panic(err)
-	}
-	return string(bytes)
+	return gabs.Wrap(j).String()
 }
 
 //返回第一个元素中没有的数据
