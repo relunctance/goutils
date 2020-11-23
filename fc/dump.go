@@ -27,7 +27,8 @@ func ColorDump(c *color.Color, vals ...interface{}) {
 	}
 }
 
-// 类似PHP  var_dump
+// The same as PHP:var_dump()
+// https://www.php.net/var_dump
 func Dump(vals ...interface{}) {
 	for _, v := range vals {
 		fmt.Println(JsonDump(v))
