@@ -5,6 +5,15 @@ import (
 	"github.com/fatih/color"
 )
 
+// alias VarDump()
+func P(vals ...interface{}) {
+	VarDump(vals...)
+
+}
+func VarDump(vals ...interface{}) {
+	ColorDump(color.New(color.FgRed).Add(color.BgHiWhite), vals...)
+}
+
 // c := color.New(color.FgCyan).Add(color.Underline)
 // c := color.New(color.FgCyan, color.Bold)
 // https://github.com/fatih/color
