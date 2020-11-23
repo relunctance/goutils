@@ -11,6 +11,10 @@ import (
 	"strings"
 )
 
+func ToString(v interface{}) string {
+	return fmt.Sprintf("%v", v)
+}
+
 // URLEncode urlencode()
 func URLEncode(str string) string {
 	return url.QueryEscape(str)

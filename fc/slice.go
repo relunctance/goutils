@@ -7,6 +7,35 @@ import (
 	"strings"
 )
 
+// 任意[]interface{}转换为[]string
+// []string => []string
+// []int => []string
+// []interface{} => []string
+// []int32 => []string
+// []uint32 => []string
+// []uint64 => []string
+// []floag64 => []string
+// ...
+func SliceToStringSlice(v interface{}) (ret []string, err error) {
+	reflectVal := reflect.ValueOf(v)
+	if reflectVal.Type().Kind().String() != "slice" {
+		return ret, fmt.Errorf("SliceToStringSlice() input value is not a slice ")
+	}
+	length := reflectVal.Len()
+	ret = make([]string, 0, length)
+	for i := 0; i < length; i++ {
+		rval := reflectVal.Index(i)
+		ret = append(ret, ToString(rval.Interface()))
+	}
+	return ret, nil
+}
+
+// 判断传入的元素是否是slice
+// 支持检测 []string, []int , []int64 , []in32 , []interface{} , []float64 , []uint32 , []uint64 , ...
+func IsSlice(v interface{}) bool {
+	return reflect.ValueOf(v).Type().Kind().String() == "slice"
+}
+
 func IsArray(value interface{}) bool {
 	rv := reflect.ValueOf(value)
 	kind := rv.Kind()
