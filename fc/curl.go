@@ -56,16 +56,13 @@ func CurlGetUp(options CurlOptions) (string, int, error) {
 
 	// 设置代理（如果需要）
 	if options.Proxy != "" {
-		// 将字符串代理地址转换为 *url.URL
 		proxyURL, err := url.Parse(options.Proxy)
 		if err != nil {
 			return "", 0, fmt.Errorf("代理地址解析失败: %v", err)
 		}
-
-		transport := &http.Transport{
+		client.Transport = &http.Transport{
 			Proxy: http.ProxyURL(proxyURL),
 		}
-		client.Transport = transport
 	}
 
 	// 创建请求
@@ -221,7 +218,7 @@ func CurlPost(url string, data interface{}) (string, error) {
 		Timeout: 30 * time.Second,
 	}
 
-	response1, status1, err1 := CurlPost(options1)
+	response1, status1, err1 := CurlPostUp(options1)
 	if err1 != nil {
 		return "", fmt.Errorf("statusCode:%d , err: %s", status1, err1.Error())
 	}
@@ -239,7 +236,7 @@ func CurlPostParams(url string, data map[string]interface{}) (string, error) {
 		Timeout:     30 * time.Second,
 	}
 
-	response2, status2, err2 := CurlPost(options2)
+	response2, status2, err2 := CurlPostUp(options2)
 	if err2 != nil {
 		return "", fmt.Errorf("statusCode:%d , err:%s", status2, err2.Error())
 	}
