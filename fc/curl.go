@@ -56,9 +56,16 @@ func CurlGetUp(options CurlOptions) (string, int, error) {
 
 	// 设置代理（如果需要）
 	if options.Proxy != "" {
-		client.Transport = &http.Transport{
-			Proxy: http.ProxyURL(options.Proxy),
+		// 将字符串代理地址转换为 *url.URL
+		proxyURL, err := url.Parse(options.Proxy)
+		if err != nil {
+			return "", 0, fmt.Errorf("代理地址解析失败: %v", err)
 		}
+
+		transport := &http.Transport{
+			Proxy: http.ProxyURL(proxyURL),
+		}
+		client.Transport = transport
 	}
 
 	// 创建请求
