@@ -206,8 +206,8 @@ func CurlPostUp(options CurlPostOptions) (string, int, error) {
 	return string(body), resp.StatusCode, nil
 }
 
-// CurlPost 适用于简单的 POST 请求，数据以JSON 格式发送
-func CurlPost(url string, data interface{}) (string, error) {
+// CurlPost 适用于简单的 POST 请求，数据以表单 格式发送
+func CurlPost(url string, data map[string]interface{}) (string, error) {
 	options1 := CurlPostOptions{
 		URL:  url,
 		Data: data,
@@ -225,14 +225,17 @@ func CurlPost(url string, data interface{}) (string, error) {
 	return response1, nil
 }
 
-// CurlPostParams 适用于简单的 POST 请求，数据以 表单格式发送
-func CurlPostParams(url string, data map[string]interface{}) (string, error) {
+// CurlPostParams 适用于简单的 JSON 请求，数据以json格式发送
+func CurlPostJson(url string, data interface{}) (string, error) {
 
 	options2 := CurlPostOptions{
 		URL:         url,
 		Data:        data,
 		ContentType: "json",
-		Headers:     map[string]string{},
+		Headers: map[string]string{
+			"User-Agent": "Go-Curl-Post/1.0",
+			"Accept":     "application/json",
+		},
 		Timeout:     30 * time.Second,
 	}
 
